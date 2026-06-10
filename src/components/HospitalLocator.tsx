@@ -664,60 +664,25 @@ out center;`;
     }
   };
 
-  // 5. Automatic Geolocation Resolver on Page Load (For Vercel/GitHub Pages deployment optimization)
+  // 5. Automatic Geolocation Resolver on Page Load (Only utilizing explicit browser Geolocation permissions)
   useEffect(() => {
     let active = true;
 
     const autoLocate = async () => {
-      setApiLogs('Analyzing client geolocation status for correct deployment mapping...');
-      
       try {
         if (navigator.permissions && navigator.permissions.query) {
           const status = await navigator.permissions.query({ name: 'geolocation' });
           if (status.state === 'granted') {
             if (active) {
-              setApiLogs('Active browser GPS access already granted. Pinpointing core coordinates...');
+              setApiLogs('Active browser GPS access verified. Pinpointing coordinates...');
               triggerGpsScan();
-              return;
             }
+          } else {
+            setApiLogs('GPS coordinates ready. Click "Locate Nearest Hospitals" to trace via GPS.');
           }
         }
       } catch (e) {
         console.warn('Permissions query unsupported:', e);
-      }
-
-      if (!active) return;
-      setApiLogs('Analyzing client network router to position map around local timezone...');
-      
-      try {
-        const response = await fetch('https://ipapi.co/json/');
-        if (!response.ok) {
-          throw new Error(`IP Geo API returned code: ${response.status}`);
-        }
-        const geo = await response.json();
-        
-        if (active && geo && typeof geo.latitude === 'number' && typeof geo.longitude === 'number') {
-          const ipCoords = { lat: geo.latitude, lng: geo.longitude };
-          setGpsCoordinates(ipCoords);
-          setMapCenter(ipCoords);
-          setMapZoom(12);
-          
-          if (geo.city) {
-            setSearchCity(geo.city);
-            if (geo.region) {
-              setSearchState(geo.region);
-            }
-          }
-          
-          setApiLogs(`Network location resolved: ${geo.city ? geo.city + ', ' : ''}${geo.region ? geo.region + ', ' : ''}${geo.country_name || 'Global Area'}. Plotting nearest cardiac hospitals...`);
-          
-          handleQueryOverpass(ipCoords);
-        }
-      } catch (err: any) {
-        console.warn('IP-based geolocation fallback failed:', err);
-        if (active) {
-          setApiLogs('Unable to auto-detect IP location. Defaulting map display to national center.');
-        }
       }
     };
 
