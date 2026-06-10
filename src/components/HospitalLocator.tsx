@@ -496,7 +496,7 @@ export default function HospitalLocator() {
           setLocPermission('granted');
           setApiLogs('GPS connection verified. Active position locked with high accuracy!');
           setErrorText(null);
-          handleQueryOverpass(uCoords);
+          handleQueryOverpass(uCoords, true);
         },
         (err) => {
           // If browser blocked it explicitly (code === 1), don't fallback to IP!
@@ -520,7 +520,7 @@ export default function HospitalLocator() {
               setLocPermission('granted');
               setApiLogs('Location locked securely using modern triangulation!');
               setErrorText(null);
-              handleQueryOverpass(uCoords);
+              handleQueryOverpass(uCoords, true);
             },
             async (err2) => {
               setIsLoading(false);
@@ -554,7 +554,7 @@ export default function HospitalLocator() {
   // Pre-load with premier cardiac center database on mount without forcing unrequested GPS popups.
 
   // 3. Query OpenStreetMap Overpass with user search radius
-  const handleQueryOverpass = async (targetCoords = gpsCoordinates) => {
+  const handleQueryOverpass = async (targetCoords = gpsCoordinates, isGpsMode = false) => {
     setIsLoading(true);
     setErrorText(null);
     setApiLogs('Plugging into OpenStreetMap Overpass GIS Servers...');
@@ -584,7 +584,7 @@ out center;`;
       if (elements.length === 0) {
         setApiLogs('Search returned zero active hospital listings in this radius.');
         setErrorText("Zero registered health yards found in range. Loading regional fallback...");
-        loadCityFallback(selectedMetro, targetCoords);
+        loadCityFallback(selectedMetro, targetCoords, isGpsMode);
         setIsLoading(false);
         return;
       }
@@ -635,18 +635,22 @@ out center;`;
       
       if (formatted.length > 0) {
         setSelectedPlaceId(formatted[0].id);
-        setMapCenter({ lat: formatted[0].lat, lng: formatted[0].lng });
+        if (isGpsMode) {
+          setMapCenter(targetCoords);
+        } else {
+          setMapCenter({ lat: formatted[0].lat, lng: formatted[0].lng });
+        }
       }
     } catch (err: any) {
       console.warn(err);
       setErrorText("Public OSM Server slow. Grounding verified regional cardiological centers.");
-      loadCityFallback(selectedMetro, targetCoords);
+      loadCityFallback(selectedMetro, targetCoords, isGpsMode);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }) => {
+  const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }, isGpsMode = false) => {
     const fallbackList = (METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0)
       ? METRO_FALLBACK_DATA[metroKey]
       : ALL_INDIA_HOSPITALS;
@@ -659,7 +663,11 @@ out center;`;
     setPlaces(mapped);
     if (mapped.length > 0) {
       setSelectedPlaceId(mapped[0].id);
-      setMapCenter({ lat: mapped[0].lat, lng: mapped[0].lng });
+      if (isGpsMode) {
+        setMapCenter(refCoords);
+      } else {
+        setMapCenter({ lat: mapped[0].lat, lng: mapped[0].lng });
+      }
       setMapZoom(12);
     }
   };
