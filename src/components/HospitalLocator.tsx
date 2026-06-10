@@ -224,32 +224,7 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
       distance: 1.8
     }
   ],
-  default: [
-    {
-      id: 'f-1',
-      name: 'Sajivani Advanced Cardiac Care Center',
-      lat: 19.0760,
-      lng: 72.8777,
-      address: '150 Health Science Boulevard, Bandra East, Mumbai, MH 400051',
-      type: 'hospital',
-      phone: '+91 22 2410 7000',
-      website: 'https://sajivani.ai',
-      emergency: 'yes',
-      distance: 0.25
-    },
-    {
-      id: 'f-2',
-      name: 'City Heart Emergency Department',
-      lat: 19.0820,
-      lng: 72.8850,
-      address: '450 Santacruz Link Road, Kurla, Mumbai 400070',
-      type: 'emergency_room',
-      phone: '+91 22 6698 6666',
-      website: 'https://sajivani.ai',
-      emergency: 'yes',
-      distance: 0.95
-    }
-  ]
+  default: []
 };
 
 const ALL_INDIA_HOSPITALS: HealthcarePlace[] = [
@@ -623,8 +598,7 @@ out center;`;
 
       if (formatted.length > 0) {
         setSelectedPlaceId(formatted[0].id);
-        // ✅ FIX: center on the first *real* nearby result, not a hardcoded fallback
-        setMapCenter({ lat: formatted[0].lat, lng: formatted[0].lng });
+        // ✅ DO NOT setMapCenter here — GPS already positioned the map correctly
       }
     } catch (err: any) {
       console.warn(err);
