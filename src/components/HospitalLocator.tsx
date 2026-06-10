@@ -251,8 +251,7 @@ export default function HospitalLocator() {
   const t = TRANSLATIONS;
 
   const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number; lng: number }>(INDIA_DEFAULT_CENTER);
-  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(INDIA_DEFAULT_CENTER);
-  const [mapZoom, setMapZoom] = useState<number>(5);
+  // mapCenter/mapZoom removed — map is driven directly via moveMapTo()
   const [locPermission, setLocPermission] = useState<'prompt' | 'granted' | 'denied'>('prompt');
   const [searchRadius] = useState<number>(50);
   const [isLoading, setIsLoading] = useState(false);
@@ -313,7 +312,7 @@ export default function HospitalLocator() {
       const map = L.map(mapContainerRef.current, {
         zoomControl: true,
         scrollWheelZoom: true,
-      }).setView([mapCenter.lat, mapCenter.lng], mapZoom);
+      }).setView([INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng], 5);
 
       const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
@@ -348,19 +347,14 @@ export default function HospitalLocator() {
     }
   }, [leafletLoaded]);
 
-  // ─── 3. Sync map viewport ─────────────────────────────────────────────────
-  useEffect(() => {
+  // ─── 3. Move map directly via ref — no useEffect sync needed ───────────────
+  // We drive the map directly from event handlers (GPS, search, card click).
+  // This helper is called wherever we previously called setMapCenter/setMapZoom.
+  const moveMapTo = (lat: number, lng: number, zoom: number) => {
     if (mapInstanceRef.current) {
-      const currentCenter = mapInstanceRef.current.getCenter();
-      const latDiff = Math.abs(currentCenter.lat - mapCenter.lat);
-      const lngDiff = Math.abs(currentCenter.lng - mapCenter.lng);
-      const zoomDiff = Math.abs(mapInstanceRef.current.getZoom() - mapZoom);
-
-      if (latDiff > 0.001 || lngDiff > 0.001 || zoomDiff > 0.1) {
-        mapInstanceRef.current.setView([mapCenter.lat, mapCenter.lng], mapZoom, { animate: true });
-      }
+      mapInstanceRef.current.setView([lat, lng], zoom, { animate: false });
     }
-  }, [mapCenter, mapZoom]);
+  };
 
   // ─── 4. Markers ──────────────────────────────────────────────────────────
   useEffect(() => {
@@ -435,8 +429,7 @@ export default function HospitalLocator() {
 
       marker.on('click', () => {
         setSelectedPlaceId(p.id);
-        setMapCenter({ lat: p.lat, lng: p.lng });
-        setMapZoom(14);
+        moveMapTo(p.lat, p.lng, 14);
         setApiLogs(`Selected facility marker: "${p.name}".`);
       });
 
@@ -464,8 +457,7 @@ export default function HospitalLocator() {
       (pos) => {
         const uCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
         setGpsCoordinates(uCoords);
-        setMapCenter(uCoords);
-        setMapZoom(13);
+        moveMapTo(uCoords.lat, uCoords.lng, 13);
         setLocPermission('granted');
         setApiLogs('GPS connection verified. Active position locked with high accuracy!');
         setErrorText(null);
@@ -486,8 +478,7 @@ export default function HospitalLocator() {
           (pos2) => {
             const uCoords = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
             setGpsCoordinates(uCoords);
-            setMapCenter(uCoords);
-            setMapZoom(13);
+            moveMapTo(uCoords.lat, uCoords.lng, 13);
             setLocPermission('granted');
             setApiLogs('Location locked securely using modern triangulation!');
             setErrorText(null);
@@ -654,8 +645,7 @@ out center;`;
   // ─── Reset to All-India view ──────────────────────────────────────────────
   const resetToAllIndia = () => {
     setSelectedMetro('all');
-    setMapCenter(INDIA_DEFAULT_CENTER);
-    setMapZoom(5);
+    moveMapTo(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, 5);
     setPlaces(ALL_INDIA_HOSPITALS);
     setSelectedPlaceId(null);
     setSearchCity('');
@@ -717,8 +707,7 @@ out center;`;
 
       if (coords) {
         setGpsCoordinates(coords);
-        setMapCenter(coords);
-        setMapZoom(12);
+        moveMapTo(coords.lat, coords.lng, 12);
         setApiLogs(`Location geocoded: Lat ${coords.lat.toFixed(4)}, Lng ${coords.lng.toFixed(4)}`);
         await handleQueryOverpass(coords);
       } else {
@@ -745,8 +734,7 @@ out center;`;
     else if (metro === 'ahmedabad') coords = { lat: 23.0225, lng: 72.5714 };
 
     setGpsCoordinates(coords);
-    setMapCenter(coords);
-    setMapZoom(12);
+    moveMapTo(coords.lat, coords.lng, 12);
     setApiLogs(`Active station jumped to Indian Metro: ${metro.toUpperCase()}`);
 
     // For manual metro jumps it's fine to show that metro's curated list and
@@ -916,8 +904,7 @@ out center;`;
                       key={p.id}
                       onClick={() => {
                         setSelectedPlaceId(p.id);
-                        setMapCenter({ lat: p.lat, lng: p.lng });
-                        setMapZoom(13);
+                        moveMapTo(p.lat, p.lng, 13);
                         setApiLogs(`Lock tracking element: "${p.name}".`);
                       }}
                       className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
