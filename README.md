@@ -48,7 +48,7 @@
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/sajivani-ai.git
+   git clone https://github.com/ritamonisonowal2/SanjivaniAI.git
    cd sajivani-ai
    ```
 
