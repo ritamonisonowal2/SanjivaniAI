@@ -230,6 +230,70 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
       distance: 1.8
     }
   ],
+  gorakhpur: [
+    {
+      id: 'gkp-1',
+      name: 'Baba Raghav Das (BRD) Medical College & Cardiac Emergency',
+      lat: 26.7909,
+      lng: 83.3758,
+      address: 'Medical College Road, Moglaha, Gorakhpur, Uttar Pradesh 273013',
+      type: 'hospital',
+      phone: '+91 551 250 1701',
+      website: 'https://brdmc.org',
+      emergency: 'yes',
+      distance: 1.0
+    },
+    {
+      id: 'gkp-2',
+      name: 'Sajivani Affiliate - Gorakhpur Heart & Intensive Care Clinic',
+      lat: 26.7592,
+      lng: 83.3732,
+      address: 'Park Road, Civil Lines, Gorakhpur, Uttar Pradesh 273001',
+      type: 'clinic',
+      phone: '+91 551 220 8900',
+      website: 'https://sajivani.ai',
+      emergency: 'no',
+      distance: 2.1
+    },
+    {
+      id: 'gkp-3',
+      name: 'Sahara Hospital & Cardiac Care Unit - Gorakhpur Branch',
+      lat: 26.7420,
+      lng: 83.3850,
+      address: 'TP Nagar Road, Near Golghar, Gorakhpur, Uttar Pradesh 273001',
+      type: 'hospital',
+      phone: '+91 551 234 4545',
+      website: 'https://saharahospitals.com',
+      emergency: 'yes',
+      distance: 3.5
+    }
+  ],
+  lucknow: [
+    {
+      id: 'lko-1',
+      name: 'Sanjay Gandhi Postgraduate Institute of Medical Sciences (SGPGI) - Cardiology',
+      lat: 26.7570,
+      lng: 80.9388,
+      address: 'New PMSSY Block, Raebareli Road, Lucknow, Uttar Pradesh 226014',
+      type: 'hospital',
+      phone: '+91 522 266 8700',
+      website: 'https://sgpgi.org.in',
+      emergency: 'yes',
+      distance: 1.2
+    },
+    {
+      id: 'lko-2',
+      name: 'King George\'s Medical University (KGMU) Cardiology & Lari Cardiology Center',
+      lat: 26.8687,
+      lng: 80.9234,
+      address: 'Shah Mina Road, Chowk, Lucknow, Uttar Pradesh 226003',
+      type: 'hospital',
+      phone: '+91 522 225 7450',
+      website: 'https://kgmu.org',
+      emergency: 'yes',
+      distance: 2.8
+    }
+  ],
   default: [
     {
       id: 'f-1',
@@ -261,9 +325,59 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
 const ALL_INDIA_HOSPITALS: HealthcarePlace[] = [
   ...METRO_FALLBACK_DATA.mumbai,
   ...METRO_FALLBACK_DATA.delhi,
+  ...METRO_FALLBACK_DATA.gorakhpur,
+  ...METRO_FALLBACK_DATA.lucknow,
   ...METRO_FALLBACK_DATA.bengaluru,
   ...METRO_FALLBACK_DATA.pune,
-  ...METRO_FALLBACK_DATA.ahmedabad
+  ...METRO_FALLBACK_DATA.ahmedabad,
+  {
+    id: 'vns-1',
+    name: 'Sir Sundarlal Hospital (BHU) Cardiology Department',
+    lat: 25.2750,
+    lng: 82.9995,
+    address: 'Banaras Hindu University Campus, Varanasi, Uttar Pradesh 221005',
+    type: 'hospital',
+    phone: '+91 542 236 9226',
+    website: 'https://bhu.ac.in',
+    emergency: 'yes',
+    distance: 1.2
+  },
+  {
+    id: 'pat-1',
+    name: 'Indira Gandhi Institute of Medical Sciences (IGIMS) - Cardiac Care',
+    lat: 25.6175,
+    lng: 85.0877,
+    address: 'Allahabadi Road, Sheikhpura, Patna, Bihar 800014',
+    type: 'hospital',
+    phone: '+91 612 229 7631',
+    website: 'http://www.igims.org',
+    emergency: 'yes',
+    distance: 1.2
+  },
+  {
+    id: 'ccu-1',
+    name: 'SSKM Hospital & IPGMER Cardiology Block',
+    lat: 22.5393,
+    lng: 88.3444,
+    address: '244 AJC Bose Road, Kolkata, West Bengal 700020',
+    type: 'hospital',
+    phone: '+91 33 2204 1100',
+    website: 'https://ipgmer.gov.in',
+    emergency: 'yes',
+    distance: 1.2
+  },
+  {
+    id: 'hyd-1',
+    name: 'Nizams Institute of Medical Sciences (NIMS) - Cardiology Department',
+    lat: 17.4190,
+    lng: 78.4485,
+    address: 'Punjagutta, Hyderabad, Telangana 500082',
+    type: 'hospital',
+    phone: '+91 40 2348 9000',
+    website: 'https://nims.edu.in',
+    emergency: 'yes',
+    distance: 1.2
+  }
 ];
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
@@ -596,10 +710,17 @@ export default function HospitalLocator() {
     const primaryRadius = Math.min(searchRadius, 25);
     const radiusMeters = Math.round(primaryRadius * 1000);
 
-    const overpassQuery = `[out:json][timeout:12];
+    const overpassQuery = `[out:json][timeout:25];
 (
-  node["amenity"~"hospital|clinic"](around:${radiusMeters},${lat},${lng});
-  way["amenity"~"hospital|clinic"](around:${radiusMeters},${lat},${lng});
+  node["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
+  node["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
+  node["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
+  way["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
+  way["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
+  way["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
+  relation["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
+  relation["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
+  relation["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
 );
 out center;`;
 
@@ -613,13 +734,13 @@ out center;`;
     let data: any = null;
     let fallbackToAllIndia = false;
 
-    // Sequential Mirror Retry Loop with short timeouts
+    // Sequential Mirror Retry Loop with safe, responsive timeouts
     for (const mirror of OVERPASS_MIRRORS) {
       const hostname = new URL(mirror).hostname;
       setApiLogs(`Plugging into OpenStreetMap server (${hostname})...`);
       const url = `${mirror}?data=${encodeURIComponent(overpassQuery)}`;
       const controller = new AbortController();
-      const tId = setTimeout(() => controller.abort(), 6500);
+      const tId = setTimeout(() => controller.abort(), 12000);
 
       try {
         const response = await fetch(url, { signal: controller.signal });
@@ -638,15 +759,19 @@ out center;`;
 
     let elements = data?.elements || [];
 
-    // Auto-Expand search: If zero results within 25km, let's try a wider 50km radius but strict only to "hospital" tag to keep it fast!
+    // Auto-Expand search: If zero results within 25km, let's try a wider 50km radius but strict to "hospital/clinic" to keep it fast!
     if (elements.length === 0 && primaryRadius < 50) {
       const expandedRadiusMeters = 50000;
       setApiLogs(`No diagnostic elements found in 25km. Expanding radial search to 50km for core hospitals...`);
       
-      const expandedQuery = `[out:json][timeout:12];
+      const expandedQuery = `[out:json][timeout:25];
 (
   node["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
+  node["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
   way["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
+  way["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
+  relation["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
+  relation["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
 );
 out center;`;
 
@@ -654,7 +779,7 @@ out center;`;
         const hostname = new URL(mirror).hostname;
         const url = `${mirror}?data=${encodeURIComponent(expandedQuery)}`;
         const controller = new AbortController();
-        const tId = setTimeout(() => controller.abort(), 6500);
+        const tId = setTimeout(() => controller.abort(), 12000);
 
         try {
           const response = await fetch(url, { signal: controller.signal });
@@ -778,6 +903,13 @@ out center;`;
   useEffect(() => {
     let active = true;
 
+    // Calculate fallback distances dynamically relative to current coordinates (initial INDIA_DEFAULT_CENTER)
+    const initialSorted = ALL_INDIA_HOSPITALS.map(h => ({
+      ...h,
+      distance: +calculateDistance(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, h.lat, h.lng).toFixed(2)
+    })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
+    setPlaces(initialSorted);
+
     const autoLocate = async () => {
       try {
         if (navigator.permissions && navigator.permissions.query) {
@@ -807,7 +939,14 @@ out center;`;
     setSelectedMetro('all');
     setMapCenter(INDIA_DEFAULT_CENTER);
     setMapZoom(5);
-    setPlaces(ALL_INDIA_HOSPITALS);
+    
+    // Sort and calculate distance dynamically based on INDIA_DEFAULT_CENTER
+    const resetSorted = ALL_INDIA_HOSPITALS.map(h => ({
+      ...h,
+      distance: +calculateDistance(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, h.lat, h.lng).toFixed(2)
+    })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
+
+    setPlaces(resetSorted);
     setSelectedPlaceId(null);
     setSearchCity('');
     setSearchState('');
