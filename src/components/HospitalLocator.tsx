@@ -17,7 +17,8 @@ import {
   ShieldAlert,
   ClipboardCheck,
   X,
-  Volume2
+  Volume2,
+  Info
 } from 'lucide-react';
 
 // Default center (Mumbai Chhatrapati Shivaji)
@@ -583,50 +584,111 @@ export default function HospitalLocator() {
 
   // Pre-load with premier cardiac center database on mount without forcing unrequested GPS popups.
 
-  // 3. Query OpenStreetMap Overpass with user search radius
+  // 3. Query OpenStreetMap Overpass with user search radius (with auto-expand and mirrors retry)
   const handleQueryOverpass = async (targetCoords = gpsCoordinates, isGpsMode = false) => {
     setIsLoading(true);
     setErrorText(null);
-    setApiLogs('Plugging into OpenStreetMap Overpass GIS Servers...');
 
     const lat = targetCoords.lat;
     const lng = targetCoords.lng;
-    const radiusMeters = Math.round(searchRadius * 1000);
+    
+    // We will start with a primary search radius (e.g. 25km) to keep queries lightning-fast and prevent timeouts
+    const primaryRadius = Math.min(searchRadius, 25);
+    const radiusMeters = Math.round(primaryRadius * 1000);
 
-    const overpassQuery = `[out:json][timeout:15];
+    const overpassQuery = `[out:json][timeout:12];
 (
-  node["amenity"~"hospital|clinic|doctors"](around:${radiusMeters},${lat},${lng});
-  way["amenity"~"hospital|clinic|doctors"](around:${radiusMeters},${lat},${lng});
+  node["amenity"~"hospital|clinic"](around:${radiusMeters},${lat},${lng});
+  way["amenity"~"hospital|clinic"](around:${radiusMeters},${lat},${lng});
 );
 out center;`;
 
-    const url = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+    const OVERPASS_MIRRORS = [
+      'https://overpass-api.de/api/interpreter',
+      'https://lz4.overpass-api.de/api/interpreter',
+      'https://overpass.kumi.systems/api/interpreter',
+      'https://overpass.nchc.org.tw/api/interpreter'
+    ];
+
+    let data: any = null;
+    let fallbackToAllIndia = false;
+
+    // Sequential Mirror Retry Loop with short timeouts
+    for (const mirror of OVERPASS_MIRRORS) {
+      const hostname = new URL(mirror).hostname;
+      setApiLogs(`Plugging into OpenStreetMap server (${hostname})...`);
+      const url = `${mirror}?data=${encodeURIComponent(overpassQuery)}`;
+      const controller = new AbortController();
+      const tId = setTimeout(() => controller.abort(), 6500);
+
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(tId);
+        if (response.ok) {
+          data = await response.json();
+          break; // Succeeded!
+        } else {
+          console.warn(`Mirror ${hostname} failed with status: ${response.status}`);
+        }
+      } catch (err: any) {
+        clearTimeout(tId);
+        console.warn(`Mirror ${hostname} query failed:`, err);
+      }
+    }
+
+    let elements = data?.elements || [];
+
+    // Auto-Expand search: If zero results within 25km, let's try a wider 50km radius but strict only to "hospital" tag to keep it fast!
+    if (elements.length === 0 && primaryRadius < 50) {
+      const expandedRadiusMeters = 50000;
+      setApiLogs(`No diagnostic elements found in 25km. Expanding radial search to 50km for core hospitals...`);
+      
+      const expandedQuery = `[out:json][timeout:12];
+(
+  node["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
+  way["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
+);
+out center;`;
+
+      for (const mirror of OVERPASS_MIRRORS) {
+        const hostname = new URL(mirror).hostname;
+        const url = `${mirror}?data=${encodeURIComponent(expandedQuery)}`;
+        const controller = new AbortController();
+        const tId = setTimeout(() => controller.abort(), 6500);
+
+        try {
+          const response = await fetch(url, { signal: controller.signal });
+          clearTimeout(tId);
+          if (response.ok) {
+            const expData = await response.json();
+            if (expData?.elements?.length > 0) {
+              elements = expData.elements;
+              break;
+            }
+          }
+        } catch (err: any) {
+          clearTimeout(tId);
+        }
+      }
+    }
+
+    if (elements.length === 0) {
+      setApiLogs('Search returned zero active hospital listings in this radius.');
+      setErrorText("Zero registered health yards found in range. Loading regional fallback...");
+      loadCityFallback(selectedMetro, targetCoords, isGpsMode);
+      setIsLoading(false);
+      return;
+    }
+
+    const EXCLUDE_KEYWORDS = [
+      'eye', 'netra', 'drishti', 'ophthalmology', 'ophthalmologist', 'optician', 'optometry', 'vision',
+      'dental', 'dentist', 'danta', 'tooth', 'teeth', 'orthodontic',
+      'veterinary', 'vet', 'animal', 'pet', 'beast',
+      'skin', 'cosmetic', 'aesthetic', 'plastic surgery', 'hair', 'derma', 'skin',
+      'ayurvedic', 'ayurveda', 'homeotherapy', 'homeopathic', 'homeopathy', 'alternative medicine'
+    ];
 
     try {
-      const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`OSM Server error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const elements = data.elements || [];
-
-      if (elements.length === 0) {
-        setApiLogs('Search returned zero active hospital listings in this radius.');
-        setErrorText("Zero registered health yards found in range. Loading regional fallback...");
-        loadCityFallback(selectedMetro, targetCoords, isGpsMode);
-        setIsLoading(false);
-        return;
-      }
-
-      const EXCLUDE_KEYWORDS = [
-        'eye', 'netra', 'drishti', 'ophthalmology', 'ophthalmologist', 'optician', 'optometry', 'vision',
-        'dental', 'dentist', 'danta', 'tooth', 'teeth', 'orthodontic',
-        'veterinary', 'vet', 'animal', 'pet', 'beast',
-        'skin', 'cosmetic', 'aesthetic', 'plastic surgery', 'hair', 'derma', 'skin',
-        'ayurvedic', 'ayurveda', 'homeotherapy', 'homeopathic', 'homeopathy', 'alternative medicine'
-      ];
-
       const formatted: HealthcarePlace[] = elements
         .map((elem: any, idx: number) => {
           const itemLat = elem.lat !== undefined ? elem.lat : (elem.center ? elem.center.lat : lat);
@@ -682,7 +744,8 @@ out center;`;
   };
 
   const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }, isGpsMode = false) => {
-    const fallbackList = (METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0)
+    const isUsingAllIndia = !(METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0);
+    const fallbackList = !isUsingAllIndia
       ? METRO_FALLBACK_DATA[metroKey]
       : ALL_INDIA_HOSPITALS;
 
@@ -692,6 +755,13 @@ out center;`;
     }));
     mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
     setPlaces(mapped);
+
+    if (isUsingAllIndia) {
+      setApiLogs(`No local GPS listings resolved inside ${searchRadius}km. Plotting verified national cardiac emergency centers by distance.`);
+    } else {
+      setApiLogs(`Displaying emergency fallback listings from regional database (${metroKey.toUpperCase()}).`);
+    }
+
     if (mapped.length > 0) {
       if (isGpsMode) {
         setSelectedPlaceId(null);
@@ -980,6 +1050,21 @@ out center;`;
                 Found care centers ({places.length})
               </span>
             </div>
+
+            {/* National Fallback Alert for Remote/Unresolved Locations */}
+            {!isLoading && places.length > 0 && places[0].distance !== undefined && places[0].distance > 50 && (
+              <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-left text-[11px] text-blue-900 leading-relaxed space-y-1 shadow-sm font-sans">
+                <div className="flex items-start gap-2">
+                  <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
+                  <div>
+                    <span className="font-extrabold text-blue-950 block">National Emergency Fallback</span>
+                    <p className="text-blue-800 font-medium">
+                      No local diagnostic listings resolved within your direct search range via satellite GIS. Displaying major Indian cardiac emergency facilities sorted by nearest distance of access.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Loading or cards map list */}
             {isLoading ? (
