@@ -338,17 +338,10 @@ export default function HospitalLocator() {
         { position: 'topright', collapsed: false }
       ).addTo(map);
 
-      map.on('moveend', () => {
-        const center = map.getCenter();
-        if (mapInstanceRef.current) {
-          setMapCenter({ lat: center.lat, lng: center.lng });
-        }
-      });
-      map.on('zoomend', () => {
-        if (mapInstanceRef.current) {
-          setMapZoom(map.getZoom());
-        }
-      });
+      // ✅ No moveend/zoomend listeners — map is driven purely by React state.
+      // Listening to Leaflet move events and feeding back into state creates a
+      // feedback loop: mid-animation getCenter() returns wrong coords which snap
+      // the map back to a stale position (Mumbai/India default).
 
       mapInstanceRef.current = map;
       markersGroupRef.current = L.layerGroup().addTo(map);
