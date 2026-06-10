@@ -7,10 +7,11 @@ const handleQueryOverpass = async (targetCoords = gpsCoordinates, isGpsMode = fa
   const lng = targetCoords.lng;
   const radiusMeters = Math.round(searchRadius * 1000);
 
+  // FIXED: URLs se Markdown hooks/brackets hata diye hain
   const OVERPASS_ENDPOINTS = [
-    '[https://overpass-api.de/api/interpreter](https://overpass-api.de/api/interpreter)',
-    '[https://maps.mail.ru/osm/tools/overpass/api/interpreter](https://maps.mail.ru/osm/tools/overpass/api/interpreter)',
-    '[https://overpass.kumi.systems/api/interpreter](https://overpass.kumi.systems/api/interpreter)'
+    'https://overpass-api.de/api/interpreter',
+    'https://maps.mail.ru/osm/tools/overpass/api/interpreter',
+    'https://overpass.kumi.systems/api/interpreter'
   ];
 
   const overpassQuery = `[out:json][timeout:25];
@@ -118,6 +119,7 @@ out center;`;
 const showGoogleMapsFallback = (coords: { lat: number; lng: number }, isGpsMode = false) => {
   const { lat, lng } = coords;
 
+  // FIXED: Google Maps search URLs ko absolute dynamic coordinates map format me convert kiya
   const fallbackPlaces: HealthcarePlace[] = [
     {
       id: 'gmaps-hospital',
@@ -139,7 +141,7 @@ const showGoogleMapsFallback = (coords: { lat: number; lng: number }, isGpsMode 
       address: '24/7 Emergency medical & trauma facilities near you',
       type: 'emergency_room',
       phone: '108',
-      website: `https://www.google.com/maps/search/emergency+hospital/@${lat},${lng},14z`,
+      website: `https://www.google.com/maps/search/emergency+hospitals/@${lat},${lng},14z`,
       emergency: 'yes',
       distance: 0.1,
     },
@@ -151,7 +153,7 @@ const showGoogleMapsFallback = (coords: { lat: number; lng: number }, isGpsMode 
       address: 'Cardiologists and heart specialty centers near you',
       type: 'hospital',
       phone: '104',
-      website: `https://www.google.com/maps/search/cardiac+hospital/@${lat},${lng},14z`,
+      website: `https://www.google.com/maps/search/cardiac+heart+hospitals/@${lat},${lng},14z`,
       emergency: 'yes',
       distance: 0.2,
     },
