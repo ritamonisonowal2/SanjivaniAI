@@ -12,11 +12,7 @@ import {
   Loader2,
   AlertTriangle,
   Activity,
-  PhoneCall,
-  ShieldAlert,
-  ClipboardCheck,
-  X,
-  Volume2
+  X
 } from 'lucide-react';
 
 // Default center (Mumbai Chhatrapati Shivaji)
@@ -33,10 +29,10 @@ interface HealthcarePlace {
   phone?: string;
   website?: string;
   emergency?: string;
-  distance?: number; // in km
+  distance?: number;
+  speciality?: string;
 }
 
-// Comprehensive translated fallbacks for global regions and major Indian Metros
 const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
   mumbai: [
     {
@@ -265,25 +261,25 @@ const ALL_INDIA_HOSPITALS: HealthcarePlace[] = [
 ];
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
-  const R = 6371.0; // Radius of the Earth in kilometers
+  const R = 6371.0;
   const dLat = (lat2 - lat1) * Math.PI / 180;
   const dLon = (lon2 - lon1) * Math.PI / 180;
-  const a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2);
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  return R * c; // distance in kilometers
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }
 
 export default function HospitalLocator() {
   const t = TRANSLATIONS;
 
-  const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number, lng: number }>(INDIA_DEFAULT_CENTER);
-  const [mapCenter, setMapCenter] = useState<{ lat: number, lng: number }>(INDIA_DEFAULT_CENTER);
+  const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number; lng: number }>(INDIA_DEFAULT_CENTER);
+  const [mapCenter, setMapCenter] = useState<{ lat: number; lng: number }>(INDIA_DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState<number>(5);
   const [locPermission, setLocPermission] = useState<'prompt' | 'granted' | 'denied'>('prompt');
-  const [searchRadius, setSearchRadius] = useState<number>(50); // km
+  const [searchRadius] = useState<number>(50);
   const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState<HealthcarePlace[]>(ALL_INDIA_HOSPITALS);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
@@ -294,15 +290,13 @@ export default function HospitalLocator() {
   const [searchState, setSearchState] = useState('');
   const [showPermissionModal, setShowPermissionModal] = useState(false);
 
-  // Leaflet mapping states & refs
   const [leafletLoaded, setLeafletLoaded] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersGroupRef = useRef<any>(null);
 
-  // 1. Dynamic Leaflet loader
+  // ─── 1. Dynamic Leaflet loader ────────────────────────────────────────────
   useEffect(() => {
-    // Add Leaflet CSS
     const cssId = 'leaflet-css-cdn';
     if (!document.getElementById(cssId)) {
       const link = document.createElement('link');
@@ -312,19 +306,14 @@ export default function HospitalLocator() {
       document.head.appendChild(link);
     }
 
-    // Add Leaflet JS
     const jsId = 'leaflet-js-cdn';
     if (!document.getElementById(jsId)) {
       const script = document.createElement('script');
       script.id = jsId;
       script.src = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.js';
       script.async = true;
-      script.onload = () => {
-        setLeafletLoaded(true);
-      };
-      script.onerror = () => {
-        console.error('Failed to load Leaflet script');
-      };
+      script.onload = () => setLeafletLoaded(true);
+      script.onerror = () => console.error('Failed to load Leaflet script');
       document.body.appendChild(script);
     } else if ((window as any).L) {
       setLeafletLoaded(true);
@@ -339,7 +328,7 @@ export default function HospitalLocator() {
     }
   }, []);
 
-  // 2. Leaflet Map Initialization
+  // ─── 2. Leaflet Map Initialization ───────────────────────────────────────
   useEffect(() => {
     if (!leafletLoaded || !mapContainerRef.current) return;
     const L = (window as any).L;
@@ -351,12 +340,29 @@ export default function HospitalLocator() {
         scrollWheelZoom: true,
       }).setView([mapCenter.lat, mapCenter.lng], mapZoom);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+      });
 
-      // Synced changes
+      const satelliteLayer = L.tileLayer(
+        'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+        {
+          maxZoom: 19,
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics'
+        }
+      );
+
+      // Default to satellite view
+      satelliteLayer.addTo(map);
+
+      // Layer toggle control in top-right corner
+      L.control.layers(
+        { 'Satellite': satelliteLayer, 'Street Map': streetLayer },
+        {},
+        { position: 'topright', collapsed: false }
+      ).addTo(map);
+
       map.on('moveend', () => {
         const center = map.getCenter();
         if (mapInstanceRef.current) {
@@ -372,13 +378,9 @@ export default function HospitalLocator() {
       mapInstanceRef.current = map;
       markersGroupRef.current = L.layerGroup().addTo(map);
     }
-
-    return () => {
-      // Keep map reference cached or remove on completely clean unmount
-    };
   }, [leafletLoaded]);
 
-  // 3. Sync map viewport with coordinates state changes smoothly
+  // ─── 3. Sync map viewport ─────────────────────────────────────────────────
   useEffect(() => {
     if (mapInstanceRef.current) {
       const currentCenter = mapInstanceRef.current.getCenter();
@@ -392,7 +394,7 @@ export default function HospitalLocator() {
     }
   }, [mapCenter, mapZoom]);
 
-  // 4. Staging markers and overlays (GPS + Hospitals)
+  // ─── 4. Markers ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (!leafletLoaded || !mapInstanceRef.current || !markersGroupRef.current) return;
     const L = (window as any).L;
@@ -400,7 +402,6 @@ export default function HospitalLocator() {
 
     markersGroupRef.current.clearLayers();
 
-    // Active User Location Pointer
     if (locPermission === 'granted') {
       const gpsHtml = `
         <div class="relative flex items-center justify-center pointer-events-none">
@@ -420,17 +421,16 @@ export default function HospitalLocator() {
         .bindPopup(`<strong>Your Current Location</strong><p style="margin:2px 0 0;font-size:10px;color:#555;">Locked via GPS / Cellular feed</p>`);
     }
 
-    // Nearby registered Healthcare services
     places.forEach((p) => {
       const isSelected = selectedPlaceId === p.id;
       const markerHtml = `
         <div class="transform transition-all duration-200" style="cursor: pointer;">
           <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg border transition-all ${
-            isSelected 
-              ? 'bg-rose-600 border-rose-300 text-white scale-110 ring-4 ring-rose-500/25' 
+            isSelected
+              ? 'bg-rose-600 border-rose-300 text-white scale-110 ring-4 ring-rose-500/25'
               : 'bg-white border-slate-200 text-rose-500 hover:border-rose-400 hover:scale-105'
           }">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 6v12"></path>
               <path d="M9 9h6"></path>
               <path d="M19 19H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2z"></path>
@@ -473,94 +473,86 @@ export default function HospitalLocator() {
       });
 
       if (isSelected) {
-        setTimeout(() => {
-          marker.openPopup();
-        }, 120);
+        setTimeout(() => marker.openPopup(), 120);
       }
     });
   }, [places, selectedPlaceId, gpsCoordinates, locPermission, leafletLoaded]);
 
+  // ─── GPS Scan ─────────────────────────────────────────────────────────────
   const triggerGpsScan = () => {
     setIsLoading(true);
     setErrorText(null);
     setApiLogs('Seeking exact GPS satellite connection. Please grant location access in your browser prompt...');
 
-    if (navigator.geolocation) {
-      // Stage 1: Request High Accuracy with a healthy timeout and allow cached targets to prevent lock issues
-      navigator.geolocation.getCurrentPosition(
-        (pos) => {
-          const uCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-          setGpsCoordinates(uCoords);
-          setMapCenter(uCoords);
-          setMapZoom(13);
-          setLocPermission('granted');
-          setApiLogs('GPS connection verified. Active position locked with high accuracy!');
-          setErrorText(null);
-          handleQueryOverpass(uCoords, true);
-        },
-        (err) => {
-          // If browser blocked it explicitly (code === 1), don't fallback to IP!
-          if (err.code === 1) {
-            setIsLoading(false);
-            setLocPermission('denied');
-            const specificError = 'Location access permission was denied by your browser. Please click the lock/settings icon in your browser address bar and set Location to "Allow", or click the "Open in New Tab" arrow at the top right of the preview tile to bypass iframe sandbox restrictions.';
-            setApiLogs(`GPS search failed: ${specificError}`);
-            setErrorText(specificError);
-            return;
-          }
-
-          // Stage 2: Attempt standard cell-tower/WiFi triangulation with high cache threshold
-          setApiLogs('High accuracy satellite lock slow. Checking local WiFi & cellular triangulation...');
-          navigator.geolocation.getCurrentPosition(
-            (pos2) => {
-              const uCoords = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
-              setGpsCoordinates(uCoords);
-              setMapCenter(uCoords);
-              setMapZoom(13);
-              setLocPermission('granted');
-              setApiLogs('Location locked securely using modern triangulation!');
-              setErrorText(null);
-              handleQueryOverpass(uCoords, true);
-            },
-            async (err2) => {
-              setIsLoading(false);
-              setLocPermission('denied');
-              
-              let specificError = '';
-              if (err2.code === 2) {
-                specificError = 'Device Location services/GPS is toggled OFF on your device settings. Please enable GPS on your device to locate.';
-              } else if (err2.code === 3) {
-                specificError = 'GPS connection timed out. Please try scanning again or try loaded fallbacks.';
-              } else {
-                specificError = err2.message || 'GPS trace failed.';
-              }
-
-              setApiLogs(`Both precise GPS and local triangulation failed: ${specificError}`);
-              setErrorText(specificError);
-            },
-            { enableHighAccuracy: false, timeout: 10000, maximumAge: Infinity }
-          );
-        },
-        { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
-      );
-    } else {
+    if (!navigator.geolocation) {
       setIsLoading(false);
       setLocPermission('denied');
       setApiLogs('Precise GPS lookup unsupported by browser environment.');
       setErrorText('Precise location lookup is not supported by your browser.');
+      return;
     }
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const uCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        setGpsCoordinates(uCoords);
+        setMapCenter(uCoords);
+        setMapZoom(13);
+        setLocPermission('granted');
+        setApiLogs('GPS connection verified. Active position locked with high accuracy!');
+        setErrorText(null);
+        handleQueryOverpass(uCoords);
+      },
+      (err) => {
+        if (err.code === 1) {
+          setIsLoading(false);
+          setLocPermission('denied');
+          const msg = 'Location access permission was denied by your browser. Please click the lock/settings icon in your browser address bar and set Location to "Allow", or click the "Open in New Tab" arrow at the top right to bypass iframe sandbox restrictions.';
+          setApiLogs(`GPS search failed: ${msg}`);
+          setErrorText(msg);
+          return;
+        }
+
+        setApiLogs('High accuracy satellite lock slow. Checking local WiFi & cellular triangulation...');
+        navigator.geolocation.getCurrentPosition(
+          (pos2) => {
+            const uCoords = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+            setGpsCoordinates(uCoords);
+            setMapCenter(uCoords);
+            setMapZoom(13);
+            setLocPermission('granted');
+            setApiLogs('Location locked securely using modern triangulation!');
+            setErrorText(null);
+            handleQueryOverpass(uCoords);
+          },
+          (err2) => {
+            setIsLoading(false);
+            setLocPermission('denied');
+            let msg = '';
+            if (err2.code === 2) {
+              msg = 'Device Location services/GPS is toggled OFF on your device settings. Please enable GPS on your device to locate.';
+            } else if (err2.code === 3) {
+              msg = 'GPS connection timed out. Please try scanning again or try loaded fallbacks.';
+            } else {
+              msg = err2.message || 'GPS trace failed.';
+            }
+            setApiLogs(`Both precise GPS and local triangulation failed: ${msg}`);
+            setErrorText(msg);
+          },
+          { enableHighAccuracy: false, timeout: 10000, maximumAge: Infinity }
+        );
+      },
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
+    );
   };
 
-  // Pre-load with premier cardiac center database on mount without forcing unrequested GPS popups.
-
-  // 3. Query OpenStreetMap Overpass with user search radius
-  const handleQueryOverpass = async (targetCoords = gpsCoordinates, isGpsMode = false) => {
+  // ─── OSM Overpass Query ───────────────────────────────────────────────────
+  const handleQueryOverpass = async (targetCoords = gpsCoordinates) => {
     setIsLoading(true);
     setErrorText(null);
     setApiLogs('Plugging into OpenStreetMap Overpass GIS Servers...');
 
-    const lat = targetCoords.lat;
-    const lng = targetCoords.lng;
+    const { lat, lng } = targetCoords;
     const radiusMeters = Math.round(searchRadius * 1000);
 
     const overpassQuery = `[out:json][timeout:15];
@@ -574,17 +566,16 @@ out center;`;
 
     try {
       const response = await fetch(url);
-      if (!response.ok) {
-        throw new Error(`OSM Server error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`OSM Server error: ${response.status}`);
 
       const data = await response.json();
       const elements = data.elements || [];
 
       if (elements.length === 0) {
         setApiLogs('Search returned zero active hospital listings in this radius.');
-        setErrorText("Zero registered health yards found in range. Loading regional fallback...");
-        loadCityFallback(selectedMetro, targetCoords, isGpsMode);
+        setErrorText('Zero registered health yards found in range. Loading regional fallback...');
+        // ✅ FIX: pass 'default' so we never jump to a wrong metro
+        loadCityFallback('default', targetCoords);
         setIsLoading(false);
         return;
       }
@@ -593,7 +584,7 @@ out center;`;
         'eye', 'netra', 'drishti', 'ophthalmology', 'ophthalmologist', 'optician', 'optometry', 'vision',
         'dental', 'dentist', 'danta', 'tooth', 'teeth', 'orthodontic',
         'veterinary', 'vet', 'animal', 'pet', 'beast',
-        'skin', 'cosmetic', 'aesthetic', 'plastic surgery', 'hair', 'derma', 'skin',
+        'skin', 'cosmetic', 'aesthetic', 'plastic surgery', 'hair', 'derma',
         'ayurvedic', 'ayurveda', 'homeotherapy', 'homeopathic', 'homeopathy', 'alternative medicine'
       ];
 
@@ -601,7 +592,6 @@ out center;`;
         .map((elem: any, idx: number) => {
           const itemLat = elem.lat !== undefined ? elem.lat : (elem.center ? elem.center.lat : lat);
           const itemLng = elem.lon !== undefined ? elem.lon : (elem.center ? elem.center.lon : lng);
-
           const tags = elem.tags || {};
           const parsedDistance = calculateDistance(lat, lng, itemLat, itemLng);
 
@@ -610,7 +600,9 @@ out center;`;
             name: tags.name || tags.official_name || `Cardiothoracic Emergency Unit #${idx + 1}`,
             lat: itemLat,
             lng: itemLng,
-            address: tags['addr:street'] ? `${tags['addr:housenumber'] || ''} ${tags['addr:street']}, ${tags['addr:city'] || ''}`.trim() : `${tags['addr:suburb'] || tags['addr:place'] || 'Care sector block'}, ${tags['addr:city'] || 'Metropolitan'}`,
+            address: tags['addr:street']
+              ? `${tags['addr:housenumber'] || ''} ${tags['addr:street']}, ${tags['addr:city'] || ''}`.trim()
+              : `${tags['addr:suburb'] || tags['addr:place'] || 'Care sector block'}, ${tags['addr:city'] || 'Metropolitan'}`,
             type: tags.amenity === 'hospital' ? 'hospital' : tags.amenity === 'clinic' ? 'clinic' : 'doctors',
             phone: tags.phone || tags['contact:phone'] || tags['emergency:phone'] || undefined,
             website: tags.website || tags['contact:website'] || undefined,
@@ -619,41 +611,40 @@ out center;`;
             speciality: tags.speciality || tags.healthcare || tags['healthcare:speciality'] || ''
           };
         })
-        .filter((place: HealthcarePlace & { speciality?: string }) => {
+        .filter((place: HealthcarePlace) => {
           const nameLower = place.name.toLowerCase();
           const specLower = (place.speciality || '').toLowerCase();
-          
-          const isExcluded = EXCLUDE_KEYWORDS.some(kw => 
-            nameLower.includes(kw) || specLower.includes(kw)
-          );
-          return !isExcluded;
+          return !EXCLUDE_KEYWORDS.some(kw => nameLower.includes(kw) || specLower.includes(kw));
         });
 
       formatted.sort((a, b) => (a.distance || 0) - (b.distance || 0));
       setPlaces(formatted);
       setApiLogs(`OSM Scan complete: Plotting ${formatted.length} facilities.`);
-      
+
       if (formatted.length > 0) {
         setSelectedPlaceId(formatted[0].id);
-        if (isGpsMode) {
-          setMapCenter(targetCoords);
-        } else {
-          setMapCenter({ lat: formatted[0].lat, lng: formatted[0].lng });
-        }
+        // ✅ FIX: center on the first *real* nearby result, not a hardcoded fallback
+        setMapCenter({ lat: formatted[0].lat, lng: formatted[0].lng });
       }
     } catch (err: any) {
       console.warn(err);
-      setErrorText("Public OSM Server slow. Grounding verified regional cardiological centers.");
-      loadCityFallback(selectedMetro, targetCoords, isGpsMode);
+      setErrorText('Public OSM Server slow. Grounding verified regional cardiological centers.');
+      // ✅ FIX: pass 'default' so we never jump to a wrong metro on error either
+      loadCityFallback('default', targetCoords);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }, isGpsMode = false) => {
-    const fallbackList = (METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0)
-      ? METRO_FALLBACK_DATA[metroKey]
-      : ALL_INDIA_HOSPITALS;
+  // ─── City Fallback Loader ─────────────────────────────────────────────────
+  // ✅ KEY FIX: Does NOT override mapCenter or mapZoom.
+  //    The caller already positioned the map correctly via GPS; we only update the
+  //    hospital list and select the closest result.
+  const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }) => {
+    const fallbackList =
+      METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0
+        ? METRO_FALLBACK_DATA[metroKey]
+        : ALL_INDIA_HOSPITALS;
 
     const mapped = fallbackList.map(h => ({
       ...h,
@@ -661,21 +652,17 @@ out center;`;
     }));
     mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
     setPlaces(mapped);
+
+    // ✅ Only update the selected card — do NOT call setMapCenter / setMapZoom here.
+    //    Those would snap the map away from the user's real GPS position.
     if (mapped.length > 0) {
       setSelectedPlaceId(mapped[0].id);
-      if (isGpsMode) {
-        setMapCenter(refCoords);
-      } else {
-        setMapCenter({ lat: mapped[0].lat, lng: mapped[0].lng });
-      }
-      setMapZoom(12);
     }
   };
 
-  // 5. Automatic Geolocation Resolver on Page Load (Only utilizing explicit browser Geolocation permissions)
+  // ─── Auto-locate on mount (only if permission already granted) ────────────
   useEffect(() => {
     let active = true;
-
     const autoLocate = async () => {
       try {
         if (navigator.permissions && navigator.permissions.query) {
@@ -693,14 +680,11 @@ out center;`;
         console.warn('Permissions query unsupported:', e);
       }
     };
-
     autoLocate();
-
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
+  // ─── Reset to All-India view ──────────────────────────────────────────────
   const resetToAllIndia = () => {
     setSelectedMetro('all');
     setMapCenter(INDIA_DEFAULT_CENTER);
@@ -712,6 +696,7 @@ out center;`;
     setApiLogs('Active map and results reset to All India view.');
   };
 
+  // ─── Search by City + State ───────────────────────────────────────────────
   const handleSearchCityState = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchCity.trim()) {
@@ -725,57 +710,54 @@ out center;`;
     setApiLogs(`Geocoding coordinates for ${searchCity}${searchState ? ', ' + searchState : ''}...`);
 
     try {
-      // Prioritize global raw search first so Vercel and GitHub deployments resolve worldwide cities beautifully
       const queryStr = `${searchCity}${searchState ? ', ' + searchState : ''}`;
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStr)}&format=json&limit=1`, {
-        headers: {
-          'Accept-Language': 'en',
-          'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
-        }
-      });
-
-      if (!response.ok) {
-        throw new Error('Geocoding server response failed');
-      }
-
-      const data = await response.json();
-      if (data && data.length > 0) {
-        const lat = parseFloat(data[0].lat);
-        const lng = parseFloat(data[0].lon);
-        const targetCoords = { lat, lng };
-
-        setGpsCoordinates(targetCoords);
-        setMapCenter(targetCoords);
-        setMapZoom(12);
-        setApiLogs(`Location geocoded: ${data[0].display_name}. Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`);
-
-        await handleQueryOverpass(targetCoords);
-      } else {
-        // Fallback to searching with ', India' suffix as secondary match
-        const queryStrAlt = `${searchCity}${searchState ? ', ' + searchState : ''}, India`;
-        const responseAlt = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStrAlt)}&format=json&limit=1`, {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStr)}&format=json&limit=1`,
+        {
           headers: {
             'Accept-Language': 'en',
-            'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
+            'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com)'
           }
-        });
-        const dataAlt = await responseAlt.json();
-        if (dataAlt && dataAlt.length > 0) {
-          const lat = parseFloat(dataAlt[0].lat);
-          const lng = parseFloat(dataAlt[0].lon);
-          const targetCoords = { lat, lng };
-
-          setGpsCoordinates(targetCoords);
-          setMapCenter(targetCoords);
-          setMapZoom(12);
-          setApiLogs(`Location geocoded: ${dataAlt[0].display_name}. Lat: ${lat.toFixed(4)}, Lng: ${lng.toFixed(4)}`);
-
-          await handleQueryOverpass(targetCoords);
-        } else {
-          setApiLogs(`Location unresolved: "${searchCity}, ${searchState}"`);
-          setErrorText(`Could not resolve location coordinates for "${searchCity}, ${searchState}". Please check the spelling.`);
-          setIsLoading(false);
         }
+      );
+      if (!response.ok) throw new Error('Geocoding server response failed');
+
+      const data = await response.json();
+
+      const resolveCoords = async (): Promise<{ lat: number; lng: number } | null> => {
+        if (data && data.length > 0) {
+          return { lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) };
+        }
+        // Secondary: try with ', India' suffix
+        const altQuery = `${searchCity}${searchState ? ', ' + searchState : ''}, India`;
+        const resAlt = await fetch(
+          `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(altQuery)}&format=json&limit=1`,
+          {
+            headers: {
+              'Accept-Language': 'en',
+              'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com)'
+            }
+          }
+        );
+        const dataAlt = await resAlt.json();
+        if (dataAlt && dataAlt.length > 0) {
+          return { lat: parseFloat(dataAlt[0].lat), lng: parseFloat(dataAlt[0].lon) };
+        }
+        return null;
+      };
+
+      const coords = await resolveCoords();
+
+      if (coords) {
+        setGpsCoordinates(coords);
+        setMapCenter(coords);
+        setMapZoom(12);
+        setApiLogs(`Location geocoded: Lat ${coords.lat.toFixed(4)}, Lng ${coords.lng.toFixed(4)}`);
+        await handleQueryOverpass(coords);
+      } else {
+        setApiLogs(`Location unresolved: "${searchCity}${searchState ? ', ' + searchState : ''}"`);
+        setErrorText(`Could not resolve coordinates for "${searchCity}". Please check the spelling.`);
+        setIsLoading(false);
       }
     } catch (err: any) {
       console.warn(err);
@@ -785,33 +767,41 @@ out center;`;
     }
   };
 
-  // Indian Metro Zone Quick Jump
+  // ─── Metro Quick Jump ─────────────────────────────────────────────────────
   const handleJumpToMetro = (metro: string) => {
     setSelectedMetro(metro);
     let coords = DEFAULT_CENTER;
-    if (metro === 'mumbai') coords = { lat: 19.0760, lng: 72.8777 };
-    else if (metro === 'delhi') coords = { lat: 28.6139, lng: 77.2090 };
+    if (metro === 'mumbai')    coords = { lat: 19.0760, lng: 72.8777 };
+    else if (metro === 'delhi')     coords = { lat: 28.6139, lng: 77.2090 };
     else if (metro === 'bengaluru') coords = { lat: 12.9716, lng: 77.5946 };
-    else if (metro === 'pune') coords = { lat: 18.5204, lng: 73.8567 };
+    else if (metro === 'pune')      coords = { lat: 18.5204, lng: 73.8567 };
     else if (metro === 'ahmedabad') coords = { lat: 23.0225, lng: 72.5714 };
 
     setGpsCoordinates(coords);
     setMapCenter(coords);
     setMapZoom(12);
     setApiLogs(`Active station jumped to Indian Metro: ${metro.toUpperCase()}`);
-    loadCityFallback(metro, coords);
+
+    // For manual metro jumps it's fine to show that metro's curated list and
+    // re-center on the first result, since the user deliberately picked the city.
+    const fallbackList = METRO_FALLBACK_DATA[metro] || ALL_INDIA_HOSPITALS;
+    const mapped = fallbackList.map(h => ({
+      ...h,
+      distance: +calculateDistance(coords.lat, coords.lng, h.lat, h.lng).toFixed(2)
+    }));
+    mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
+    setPlaces(mapped);
+    if (mapped.length > 0) {
+      setSelectedPlaceId(mapped[0].id);
+    }
   };
-
-  // Removed searchRadius event synchronization watcher
-
-
 
   const selectedPlace = places.find(p => p.id === selectedPlaceId);
 
   return (
     <div className="space-y-6" id="open-care-locator-root">
-      
-      {/* Visual Workspace Subheader */}
+
+      {/* ── Header ── */}
       <div className="bg-white border border-slate-200 p-5 rounded-3xl flex flex-col md:flex-row gap-5 justify-between items-start md:items-center shadow-sm">
         <div className="space-y-1 text-left">
           <div className="flex items-center gap-2">
@@ -821,13 +811,10 @@ out center;`;
             </span>
           </div>
           <h3 className="text-sm font-extrabold text-slate-900 tracking-tight">{t.locator.title}</h3>
-          <p className="text-sm text-slate-600 max-w-xl">
-            {t.locator.subtitle}
-          </p>
+          <p className="text-sm text-slate-600 max-w-xl">{t.locator.subtitle}</p>
         </div>
 
-        {/* Scan & Locate Area trigger button directly targeting browser request */}
-        <button 
+        <button
           onClick={() => setShowPermissionModal(true)}
           disabled={isLoading}
           className={`${isLoading ? 'bg-slate-500 cursor-not-allowed opacity-90' : 'bg-slate-900 hover:bg-slate-800 cursor-pointer'} text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-md`}
@@ -841,7 +828,7 @@ out center;`;
         </button>
       </div>
 
-      {/* Search by City & State Panel */}
+      {/* ── City Search ── */}
       <div className="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm text-left space-y-4">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
           <div>
@@ -893,7 +880,7 @@ out center;`;
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white animate-duration-1000" />
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Searching...</span>
                 </>
               ) : (
@@ -907,19 +894,15 @@ out center;`;
         </form>
       </div>
 
-      {/* Main dual column map view */}
+      {/* ── Main dual-column layout ── */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
-        
-        {/* Left Side: Hospital dynamic cards list (4 cols) */}
+
+        {/* Left: Hospital list */}
         <div className="lg:col-span-4 flex flex-col justify-between space-y-4 order-2 lg:order-1">
-          
           <div className="space-y-3 flex-1 overflow-y-auto max-h-[520px] pr-2 scroller-thin text-left">
-            
 
-
-            {/* Error notifications */}
             {errorText && (
-              <div id="gps-error-alert-banner" className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-left text-xs text-amber-900 leading-relaxed space-y-2.5 shadow-sm">
+              <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-left text-xs text-amber-900 leading-relaxed space-y-2.5 shadow-sm">
                 <div className="flex items-start gap-2.5">
                   <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                   <div className="space-y-0.5">
@@ -931,8 +914,8 @@ out center;`;
                   <span className="font-bold text-slate-800 block">Immediate steps to trace your location:</span>
                   <ul className="list-decimal pl-4 space-y-1 text-[11.5px] text-slate-600">
                     <li>Verify your phone/computer's <strong>GPS / Location Services</strong> is toggled <strong>ON</strong>.</li>
-                    <li>Look next to the URL bar above—click the site settings / lock icon and set <strong>Location access to "Allow"</strong>.</li>
-                    <li>Once GPS is active, click the <strong>"Scan nearby care"</strong> button above again.</li>
+                    <li>Click the site settings / lock icon in the URL bar and set <strong>Location access to "Allow"</strong>.</li>
+                    <li>Once GPS is active, click <strong>"Scan nearby care"</strong> again.</li>
                   </ul>
                   <p className="text-[10px] text-slate-500 pt-0.5 font-semibold">
                     * Sajivani strictly uses your location on-device to seek nearby emergency clinics, protecting your privacy.
@@ -941,7 +924,6 @@ out center;`;
               </div>
             )}
 
-            {/* Title of active results */}
             <div className="flex items-center gap-1.5 px-1 py-1">
               <Hospital className="w-4 h-4 text-rose-500 shrink-0" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
@@ -949,7 +931,6 @@ out center;`;
               </span>
             </div>
 
-            {/* Loading or cards map list */}
             {isLoading ? (
               <div className="py-12 flex flex-col items-center justify-center gap-3 text-slate-400 text-xs font-medium">
                 <Loader2 className="w-6 h-6 text-slate-600 animate-spin" />
@@ -964,7 +945,7 @@ out center;`;
                 {places.map((p) => {
                   const isSelected = selectedPlaceId === p.id;
                   return (
-                    <div 
+                    <div
                       key={p.id}
                       onClick={() => {
                         setSelectedPlaceId(p.id);
@@ -973,8 +954,8 @@ out center;`;
                         setApiLogs(`Lock tracking element: "${p.name}".`);
                       }}
                       className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
-                        isSelected 
-                          ? 'bg-rose-50/50 border-rose-300 ring-1 ring-rose-300 shadow-sm' 
+                        isSelected
+                          ? 'bg-rose-50/50 border-rose-300 ring-1 ring-rose-300 shadow-sm'
                           : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
                       }`}
                     >
@@ -986,8 +967,8 @@ out center;`;
                           {p.type.replace('_', ' ')}
                         </span>
                       </div>
-                      
-                      <p className="text-[10.5px] text-slate-500 mt-1 lines-clamp-1 flex items-center gap-1 leading-snug">
+
+                      <p className="text-[10.5px] text-slate-500 mt-1 flex items-center gap-1 leading-snug">
                         <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                         <span>{p.address}</span>
                       </p>
@@ -1008,7 +989,7 @@ out center;`;
                       {isSelected && (
                         <div className="mt-3 pt-3 border-t border-slate-200 flex items-center gap-2">
                           {p.phone ? (
-                            <a 
+                            <a
                               href={`tel:${p.phone}`}
                               onClick={(e) => e.stopPropagation()}
                               className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 mr-1"
@@ -1021,7 +1002,7 @@ out center;`;
                               No telephone recorded
                             </div>
                           )}
-                          <a 
+                          <a
                             href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
                             target="_blank"
                             rel="noopener noreferrer"
@@ -1040,7 +1021,7 @@ out center;`;
             )}
           </div>
 
-          {/* Coordinate telemetry metadata tag */}
+          {/* Coordinate telemetry */}
           <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-left space-y-1">
             <div className="flex items-center justify-between text-[11px] font-mono">
               <span className="text-slate-500 font-sans font-medium">Active GPS Telemetry:</span>
@@ -1051,16 +1032,14 @@ out center;`;
           </div>
         </div>
 
-        {/* Right Side Map Canvas Overlay panel (8 cols) */}
+        {/* Right: Map */}
         <div className="lg:col-span-8 flex flex-col justify-between border border-slate-200 rounded-3xl overflow-hidden bg-slate-50 relative h-auto min-h-[380px] lg:min-h-[520px] shadow-sm order-1 lg:order-2">
-          
-          {/* Telemetry log tag overlay */}
+
           <div className="absolute top-4 left-4 z-[10] bg-slate-950/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-xl border border-slate-800 text-[10px] font-mono flex items-center gap-2 shadow-lg text-left">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
             <span>Sajivani Live GIS Platform</span>
           </div>
 
-          {/* Dynamic Leaflet GIS Map Canvas */}
           <div className="flex-1 w-full bg-slate-100 relative h-[320px] sm:h-[400px] lg:h-[480px] z-[5] overflow-hidden">
             {!leafletLoaded ? (
               <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-slate-900 text-slate-400 p-6">
@@ -1073,15 +1052,14 @@ out center;`;
                 </p>
               </div>
             ) : (
-              <div 
-                ref={mapContainerRef} 
-                className="w-full h-full" 
+              <div
+                ref={mapContainerRef}
+                className="w-full h-full"
                 style={{ height: '100%', minHeight: '320px' }}
               />
             )}
           </div>
 
-          {/* Directions navigation bar under map */}
           {selectedPlace && (
             <div className="bg-slate-950 text-white p-4 border-t border-slate-800 text-left text-xs z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1">
@@ -1095,17 +1073,17 @@ out center;`;
               </div>
               <div className="flex items-center gap-2 shrink-0">
                 {selectedPlace.website && (
-                  <a 
-                    href={selectedPlace.website} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={selectedPlace.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 border border-slate-700 rounded-xl font-mono text-[10.5px] font-bold flex items-center gap-1 transition-all"
                   >
                     <Globe className="w-3.5 h-3.5 text-slate-400" />
                     Web Portal
                   </a>
                 )}
-                <a 
+                <a
                   href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPlace.lat},${selectedPlace.lng}`}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -1117,7 +1095,6 @@ out center;`;
             </div>
           )}
 
-          {/* GIS dynamic console logs */}
           <div className="bg-slate-950 p-2.5 border-t border-slate-900 font-mono text-xs text-slate-400 flex items-center gap-2 text-left justify-between z-10">
             <div className="flex items-center gap-2 truncate">
               <Activity className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
@@ -1130,24 +1107,20 @@ out center;`;
               </span>
             )}
           </div>
-
         </div>
-
       </div>
 
-      {/* Turn on GPS Location Reminder Modal */}
+      {/* ── GPS Permission Modal ── */}
       {showPermissionModal && (
         <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-200">
           <div className="bg-white rounded-3xl max-w-md w-full border border-slate-200 p-6 md:p-8 space-y-6 shadow-2xl relative text-left">
-            {/* Close Button */}
-            <button 
+            <button
               onClick={() => setShowPermissionModal(false)}
               className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>
 
-            {/* Header Icon & Title */}
             <div className="text-center space-y-3">
               <div className="w-14 h-14 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-500 animate-pulse">
                 <Compass className="w-7 h-7 text-rose-500" />
@@ -1162,44 +1135,35 @@ out center;`;
               </div>
             </div>
 
-            {/* Instructional Content */}
-            <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl text-[11px] text-slate-705 space-y-4 font-sans leading-relaxed">
+            <div className="bg-slate-50 border border-slate-150 p-4 rounded-2xl text-[11px] text-slate-700 space-y-4 font-sans leading-relaxed">
               <p className="font-extrabold text-slate-900 leading-normal">
-                To show premium cardiac care and clinics around you, Sajivani maps your location using active physical GPS satellite coordinates correctly:
+                To show cardiac care and clinics near you, Sajivani maps your location using active GPS satellite coordinates:
               </p>
-              
               <ul className="space-y-3">
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                    1
-                  </span>
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">1</span>
                   <div>
-                    <span className="font-extrabold text-slate-950 block">Scan Device GPS Panel</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">Please pull down your screen quick settings (mobile) or click your clock bar settings (desktop) and switch location status to **ON**.</span>
+                    <span className="font-extrabold text-slate-950 block">Enable Device GPS</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">Pull down quick settings (mobile) or open system settings (desktop) and switch Location to ON.</span>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                    2
-                  </span>
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">2</span>
                   <div>
-                    <span className="font-extrabold text-slate-950 block">Approve Browser Geolocation Prompt</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">Click "Allow/Permit" once the system requests coordinate telemetry.</span>
+                    <span className="font-extrabold text-slate-950 block">Approve Browser Prompt</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">Click "Allow" when the browser asks for your location.</span>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
-                    3
-                  </span>
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">3</span>
                   <div>
-                    <span className="font-extrabold text-slate-950 block">If Using Sandbox Preview</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">If location is blocked in this side iframe, please click the <strong>"Open in New Tab"</strong> arrow button above to authorize GPS cleanly.</span>
+                    <span className="font-extrabold text-slate-950 block">Using a Preview Iframe?</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">Click the <strong>"Open in New Tab"</strong> arrow above to authorize GPS without iframe sandbox restrictions.</span>
                   </div>
                 </li>
               </ul>
             </div>
 
-            {/* Actions */}
             <div className="flex flex-col gap-2 pt-2">
               <button
                 onClick={() => {
