@@ -664,6 +664,70 @@ out center;`;
     }
   };
 
+  // 5. Automatic Geolocation Resolver on Page Load (For Vercel/GitHub Pages deployment optimization)
+  useEffect(() => {
+    let active = true;
+
+    const autoLocate = async () => {
+      setApiLogs('Analyzing client geolocation status for correct deployment mapping...');
+      
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          const status = await navigator.permissions.query({ name: 'geolocation' });
+          if (status.state === 'granted') {
+            if (active) {
+              setApiLogs('Active browser GPS access already granted. Pinpointing core coordinates...');
+              triggerGpsScan();
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Permissions query unsupported:', e);
+      }
+
+      if (!active) return;
+      setApiLogs('Analyzing client network router to position map around local timezone...');
+      
+      try {
+        const response = await fetch('https://ipapi.co/json/');
+        if (!response.ok) {
+          throw new Error(`IP Geo API returned code: ${response.status}`);
+        }
+        const geo = await response.json();
+        
+        if (active && geo && typeof geo.latitude === 'number' && typeof geo.longitude === 'number') {
+          const ipCoords = { lat: geo.latitude, lng: geo.longitude };
+          setGpsCoordinates(ipCoords);
+          setMapCenter(ipCoords);
+          setMapZoom(12);
+          
+          if (geo.city) {
+            setSearchCity(geo.city);
+            if (geo.region) {
+              setSearchState(geo.region);
+            }
+          }
+          
+          setApiLogs(`Network location resolved: ${geo.city ? geo.city + ', ' : ''}${geo.region ? geo.region + ', ' : ''}${geo.country_name || 'Global Area'}. Plotting nearest cardiac hospitals...`);
+          
+          handleQueryOverpass(ipCoords);
+        }
+      } catch (err: any) {
+        console.warn('IP-based geolocation fallback failed:', err);
+        if (active) {
+          setApiLogs('Unable to auto-detect IP location. Defaulting map display to national center.');
+        }
+      }
+    };
+
+    autoLocate();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const resetToAllIndia = () => {
     setSelectedMetro('all');
     setMapCenter(INDIA_DEFAULT_CENTER);
@@ -688,7 +752,8 @@ out center;`;
     setApiLogs(`Geocoding coordinates for ${searchCity}${searchState ? ', ' + searchState : ''}...`);
 
     try {
-      const queryStr = `${searchCity}${searchState ? ', ' + searchState : ''}, India`;
+      // Prioritize global raw search first so Vercel and GitHub deployments resolve worldwide cities beautifully
+      const queryStr = `${searchCity}${searchState ? ', ' + searchState : ''}`;
       const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStr)}&format=json&limit=1`, {
         headers: {
           'Accept-Language': 'en',
@@ -713,7 +778,8 @@ out center;`;
 
         await handleQueryOverpass(targetCoords);
       } else {
-        const queryStrAlt = `${searchCity}${searchState ? ', ' + searchState : ''}`;
+        // Fallback to searching with ', India' suffix as secondary match
+        const queryStrAlt = `${searchCity}${searchState ? ', ' + searchState : ''}, India`;
         const responseAlt = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStrAlt)}&format=json&limit=1`, {
           headers: {
             'Accept-Language': 'en',
