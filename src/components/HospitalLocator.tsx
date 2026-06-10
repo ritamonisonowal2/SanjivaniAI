@@ -9,6 +9,7 @@ import {
   Navigation, 
   Navigation2, 
   Globe, 
+  Map, 
   Loader2,
   AlertTriangle,
   Activity,
@@ -293,12 +294,14 @@ export default function HospitalLocator() {
   const [searchCity, setSearchCity] = useState('');
   const [searchState, setSearchState] = useState('');
   const [showPermissionModal, setShowPermissionModal] = useState(false);
+  const [mapType, setMapType] = useState<'streets' | 'satellite'>('streets');
 
   // Leaflet mapping states & refs
   const [leafletLoaded, setLeafletLoaded] = useState(false);
   const mapContainerRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<any>(null);
   const markersGroupRef = useRef<any>(null);
+  const tileLayerRef = useRef<any>(null);
 
   // 1. Dynamic Leaflet loader
   useEffect(() => {
@@ -351,10 +354,11 @@ export default function HospitalLocator() {
         scrollWheelZoom: true,
       }).setView([mapCenter.lat, mapCenter.lng], mapZoom);
 
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      const baseLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       }).addTo(map);
+      tileLayerRef.current = baseLayer;
 
       // Synced changes
       map.on('moveend', () => {
@@ -377,6 +381,31 @@ export default function HospitalLocator() {
       // Keep map reference cached or remove on completely clean unmount
     };
   }, [leafletLoaded]);
+
+  // 2b. Map Layer Switcher Sync
+  useEffect(() => {
+    if (!leafletLoaded || !mapInstanceRef.current) return;
+    const L = (window as any).L;
+    if (!L) return;
+
+    if (tileLayerRef.current) {
+      mapInstanceRef.current.removeLayer(tileLayerRef.current);
+    }
+
+    if (mapType === 'satellite') {
+      tileLayerRef.current = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        maxZoom: 19,
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+      });
+    } else {
+      tileLayerRef.current = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      });
+    }
+
+    tileLayerRef.current.addTo(mapInstanceRef.current);
+  }, [mapType, leafletLoaded]);
 
   // 3. Sync map viewport with coordinates state changes smoothly
   useEffect(() => {
@@ -1061,6 +1090,24 @@ out center;`;
           <div className="absolute top-4 left-4 z-[10] bg-slate-950/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-xl border border-slate-800 text-[10px] font-mono flex items-center gap-2 shadow-lg text-left">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
             <span>Sajivani Live GIS Platform</span>
+          </div>
+
+          {/* Map Layer Switcher Overlay (Streets / Satellite) */}
+          <div className="absolute top-4 right-4 z-[10] bg-white/95 backdrop-blur-md p-1 rounded-2xl border border-slate-200/80 shadow-lg flex items-center gap-1">
+            <button
+              onClick={() => setMapType('streets')}
+              className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer ${mapType === 'streets' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+            >
+              <Map className="w-3.5 h-3.5" />
+              <span>Map view</span>
+            </button>
+            <button
+              onClick={() => setMapType('satellite')}
+              className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer ${mapType === 'satellite' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>Satellite</span>
+            </button>
           </div>
 
           {/* Dynamic Leaflet GIS Map Canvas */}
