@@ -88,7 +88,7 @@ export default function App() {
           <div className="space-y-3">
             <h1 className="text-4xl sm:text-5xl font-extrabold text-slate-900 tracking-tight leading-none animate-slide-up flex items-center justify-center gap-2.5 sm:gap-3.5">
               <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-rose-500 animate-pulse shrink-0" />
-              <span>Sajivani AI</span>
+              <span>Sanjivani AI</span>
             </h1>
             <p className="text-sm text-rose-600 font-bold max-w-md mx-auto block font-mono tracking-wider uppercase">
               {t.general.taglineSubtitle}
@@ -250,10 +250,10 @@ export default function App() {
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Heart className="w-5 h-5 text-rose-600" />
-                <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">Sajivani AI</span>
+                <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">Sanjivani AI</span>
               </div>
               <p className="text-sm text-slate-600 max-w-xl font-sans">
-                Sajivani AI is designed to empower bystanders with clinical protocols to handle critical cardiac emergencies.
+                Sanjivani AI is designed to empower bystanders with clinical protocols to handle critical cardiac emergencies.
               </p>
             </div>
 
@@ -315,7 +315,7 @@ export default function App() {
               </div>
               <div className="font-sans">
                 <span className="text-[10px] font-mono tracking-widest text-red-400 font-extrabold uppercase block">
-                  🚨 Sajivani Rescuer Emergency Triage Mode
+                  🚨 Sanjivani Rescuer Emergency Triage Mode
                 </span>
                 <h3 className="text-lg sm:text-xl font-black text-white leading-tight tracking-tight mt-0.5">
                   Scanned Patient Medical Passport
@@ -336,7 +336,7 @@ export default function App() {
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono mt-1 font-bold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Sajivani Cryptographically Decoded</span>
+                  <span>Sanjivani Cryptographically Decoded</span>
                 </div>
               </div>
 
