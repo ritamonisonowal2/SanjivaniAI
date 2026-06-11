@@ -4,117 +4,117 @@ export const conditions: ConditionDetail[] = [
   {
     id: 'heart-attack',
     name: 'Heart Attack',
-    pronunciation: 'Myocardial Infarction',
-    system: 'Circulatory (Plumbing)',
-    analogy: 'Plumbing Blockage',
-    shortSummary: 'A blocked artery prevents oxygen-rich blood from reaching a section of the heart muscle. The heart is still beating.',
-    trigger: 'Coronary artery blockage',
-    description: 'A heart attack occurs when a coronary artery becomes blocked—usually by a buildup of plaque and blood clots—depriving a portion of the heart muscle of oxygen. If blood flow is not restored quickly, the tissue begins to die. Importantly, the heart continues to beat during a heart attack.',
+    pronunciation: 'Heart Attack (Blocked pipe)',
+    system: 'Blood flow system (Plumbing)',
+    analogy: 'Water pipe is blocked',
+    shortSummary: 'A blocked blood pipe stops fresh blood from reaching a part of the heart muscle. The heart is still beating, but it hurts.',
+    trigger: 'A heart pipe is blocked',
+    description: 'A heart attack happens when one of the pipes carrying blood to the heart muscle gets clogged up (usually by fat or clots). Without blood, that part of the heart begins to get hurt. Crucially, the heart is still beating and the person is usually awake.',
     symptoms: [
-      { text: 'Chest pain, tightness, squeezing, or aching in the center of the chest', critical: true },
-      { text: 'Pain radiating to the left arm, shoulders, back, neck, or jaw', critical: true },
-      { text: 'Shortness of breath (often experienced before or alongside chest pain)', critical: false },
-      { text: 'Unexplained cold sweats, dizziness, nausea, or extreme lightheadedness', critical: false },
-      { text: 'Atypical symptoms: women often experience nausea, shortness of breath, or back/jaw pain rather than crushing chest pain', critical: true }
+      { text: 'Tightness, squeezing, or heavy weight in the middle of the chest', critical: true },
+      { text: 'Pain radiating to the left arm, shoulders, neck, or jaw', critical: true },
+      { text: 'Trouble breathing (feeling winded easily)', critical: false },
+      { text: 'Unexplained cold sweating, feeling dizzy, or feeling sick in the stomach', critical: false },
+      { text: 'Note for women: Women often feel sick in the stomach, feel tired, or have back/jaw pain instead of normal chest pain', critical: true }
     ],
     firstAidSteps: [
-      { step: 1, title: 'Call Emergency Services', details: 'Dial 911 or your local emergency number immediately. Every minute counts.', isPrimary: true },
-      { step: 2, title: 'Chew an Aspirin', details: 'Chew and swallow a single full adult aspirin (or 4 low-dosage baby aspirins) to help thin blood, unless allergic.', isPrimary: true },
-      { step: 3, title: 'Rest Comfortably', details: 'Sit down and remain calm. Keep the patient in a semi-reclined position to reduce the work required of the heart.', isPrimary: false },
-      { step: 4, title: 'Monitor Status', details: 'Check if they are fully conscious and breathing. Prepare to perform CPR if they suddenly lose consciousness and stop breathing.', isPrimary: false }
+      { step: 1, title: 'Call 112 / 108 Emergency Number', details: 'Call the ambulance immediately. Every minute is very important to save the heart muscle.', isPrimary: true },
+      { step: 2, title: 'Chew a Blood-Thinner (Aspirin)', details: 'If they can swallow and are not allergic, let them chew one adult aspirin. This helps blood flow through the block.', isPrimary: true },
+      { step: 3, title: 'Sit Down and Calm Down', details: 'Sit down comfortably. Do not let the person walk or work. Staying calm helps the heart rest.', isPrimary: false },
+      { step: 4, title: 'Watch Them Closely', details: 'Make sure they are awake and breathing. If they suddenly fall asleep and stop breathing, start pushing on their chest (CPR).', isPrimary: false }
     ],
     causes: [
-      'Coronary Artery Disease (CAD)',
-      'High arterial plaque accumulation (atherosclerosis)',
-      'Tobacco smoking and electronic nicotine use',
-      'Unmanaged hypertension (high blood pressure) and elevated LDL cholesterol',
-      'Sedentary lifestyle and chronic metabolic conditions'
+      'Blocked heart pipes (clogged with fats over time)',
+      'High bad cholesterol from eating too much oily/fatty food',
+      'Smoking cigarettes, beedi, or other tobacco products',
+      'High blood pressure that is not controlled',
+      'Lack of daily walking and active body movement'
     ],
     mythVsFact: [
       {
-        myth: 'A heart attack always presents as a sudden, dramatic "Hollywood-style" collapse with crushing chest pain.',
-        fact: 'Most heart attacks start slowly, with mild discomfort or pressure. Many people mistake them for indigestion, delaying critical treatment.'
+        myth: 'A heart attack always makes you fall down instantly like in films.',
+        fact: 'Most heart attacks start slowly with mild pressure or a full feeling. People often mistake it for a bad gas problem or indigestion, which is very dangerous because they delay going to the doctor.'
       },
       {
-        myth: 'Men and women experience the exact same heart attack warning signs.',
-        fact: 'Women are much more likely to experience atypical symptoms such as extreme fatigue, shortness of breath, back or jaw pain, and vomiting, either with or without chest pressure.'
+        myth: 'Men and women have the exact same signs of a heart attack.',
+        fact: 'Women often do not feel heavy chest pain. Instead, they might feel very tired, out of breath, have a stomach ache, or jaw/back pain.'
       }
     ]
   },
   {
     id: 'cardiac-arrest',
     name: 'Cardiac Arrest',
-    pronunciation: 'Sudden Cardiac Arrest (SCA)',
-    system: 'Electrical (Rhythm)',
-    analogy: 'Power Blackout',
-    shortSummary: 'An electrical malfunction causes the heart to suddenly and unexpectedly stop beating. This is an immediate fatal crisis.',
-    trigger: 'Severe electrical arrhythmia',
-    description: 'Cardiac arrest is an abrupt, unexpected loss of heart function, breathing, and consciousness. It is caused by an electrical glitch in the heart that triggers a chaotic, rapid rhythm (arrhythmia), such as Ventricular Fibrillation (V-Fib). Without pumping action, blood flow to the brain and vital organs stops. Death occurs within minutes without intervention.',
+    pronunciation: 'Cardiac Arrest (Heart stops beating)',
+    system: 'Heart electrical switch (Power system)',
+    analogy: 'Home power trip / Sudden blackout',
+    shortSummary: 'An electrical spark problem makes the heart suddenly stop beating entirely. The person falls down and stops breathing. This is a maximum emergency.',
+    trigger: 'Heart electricity stops working',
+    description: 'Cardiac arrest is when the heart suddenly stops beating. It is caused by an electrical problem in the heart. Because the heart stops, no blood goes to the brain or body. The person will collapse instantly, lose consciousness, and stop breathing. They will die in minutes if no one helps.',
     symptoms: [
-      { text: 'Sudden collapse with complete loss of consciousness', critical: true },
-      { text: 'No breathing at all, or only gasping, labored, or irregular snores (agonal breathing)', critical: true },
-      { text: 'Absolute unresponsiveness to shouting, shaking, or physical touch', critical: true },
-      { text: 'No detectable carotid pulse or heartbeat', critical: true }
+      { text: 'Sudden collapse: falling down on the ground suddenly', critical: true },
+      { text: 'No response: they do not answer if you shake or shout at them', critical: true },
+      { text: 'Not breathing, or only layout strange snoring/gasping noises', critical: true },
+      { text: 'No pulse or heartbeat can be felt at all', critical: true }
     ],
     firstAidSteps: [
-      { step: 1, title: 'Call 911 Immediately', details: 'Shout for nearby help. Call emergency services instantly. If someone else is there, send them to find a nearby AED.', isPrimary: true },
-      { step: 2, title: 'Begin Hands-Only CPR', details: 'Push hard and fast in the center of the chest at a rate of 100 to 120 compressions per minute (to the beat of the song "Stayin\' Alive").', isPrimary: true },
-      { step: 3, title: 'Deploy an AED', details: 'Turn on the Automated External Defibrillator. It will give clear voice commands. Apply the sticky pads and only deliver a shock if instructed.', isPrimary: true },
-      { step: 4, title: 'Continue Compressions', details: 'Resume high-quality chest compressions immediately after the AED delivers or advises against a shock, minimizing interruptions.', isPrimary: false }
+      { step: 1, title: 'Call 112 / 108 Instantly', details: 'Shout loudly for help. Call the emergency ambulance. Ask someone to look for a heart shock machine (AED).', isPrimary: true },
+      { step: 2, title: 'Start Pushing Hard and Fast on Chest (CPR)', details: 'Put your hands in the middle of their chest. Push down hard and fast, about 100 to 120 times every minute.', isPrimary: true },
+      { step: 3, title: 'Use a Shock Machine (AED) if Available', details: 'Turn on the machine. It will talk and tell you exactly what to do. Stick the pads on their chest and push the shock button only if it tells you to.', isPrimary: true },
+      { step: 4, title: 'Do Not Stop pushing', details: 'Keep doing chest presses continuously. Only stop when the emergency ambulance gets there or the person wakes up.', isPrimary: false }
     ],
     causes: [
-      'Prior coronary heart conditions (e.g. recent heart attacks)',
-      'Cardiomyopathy (pathological enlargement or thickening of the heart tissue)',
-      'Congenital or inherited heart rhythm conditions (e.g., Long QT syndrome)',
-      'Severe respiratory failure, mechanical trauma, or drug toxicity'
+      'Previous uncorrected heart attacks that left deep scars',
+      'Thickened or enlarged heart muscle',
+      'Genetic heart issues you are born with',
+      'Drowning, severe choking, electrocution, or major body shock'
     ],
     mythVsFact: [
       {
-        myth: 'Cardiac arrest and a heart attack are identical conditions under different medical terms.',
-        fact: 'They are fundamentally different. A heart attack is a circulation failure (clogged blood vessel), while cardiac arrest is an electrical failure (heart stops beating). A heart attack can sometimes trigger cardiac arrest, but they are not the same.'
+        myth: 'SCA and heart attack are exactly the same thing.',
+        fact: 'They are different. A heart attack is a blocked pipe (the person is awake and talks, heart still beats). Cardiac arrest is a power cut (the person falls down, heart stops, and they are not breathing).'
       },
       {
-        myth: 'Only older individuals with severe cardiovascular diagnoses suffer from cardiac arrest.',
-        fact: 'Cardiac arrest can strike anyone, at any age—including young, seemingly healthy athletes in peak conditioning, often due to underlying, undiagnosed structural or genetic electrical defects.'
+        myth: 'Only old people get sudden cardiac arrest.',
+        fact: 'It can happen to anyone of any age, including teenagers and sportsmen, usually because of a hidden heart electricity problem they did not know about.'
       }
     ]
   },
   {
     id: 'heart-failure',
     name: 'Heart Failure',
-    pronunciation: 'Congestive Heart Failure',
-    system: 'Mechanical (Pumping)',
-    analogy: 'Pump Fatigue / Muscle Weakness',
-    shortSummary: 'A chronic, progressive condition where the heart muscle is too weak, stiff, or exhausted to pump blood efficiently.',
-    trigger: 'Myocardial structural fatigue',
-    description: 'Heart failure is a chronic, progressive cardiovascular condition in which the heart muscle is unable to pump blood with enough strength to fully support the body\'s oxygen demands. It does not mean the heart has stopped working, but rather that the heart is operating at diminished capacity, leading to fluid congestion in tissues and lungs. It is manageable with persistent medical therapies.',
+    pronunciation: 'Heart Failure (Weak heart pump)',
+    system: 'Heart physical pump (Muscle strength)',
+    analogy: 'Very weak water pump or tired motor',
+    shortSummary: 'A long-term condition where the heart muscle is too weak or tired to pump blood well around the body.',
+    trigger: 'Heart muscle is too weak',
+    description: 'Heart failure does NOT mean the heart has stopped working. It means the heart is too weak to pump blood properly. This causes water and fluid to group up in the lungs, ankles, and legs. It is a long-term problem but can be treated with regular daily medicines.',
     symptoms: [
-      { text: 'Shortness of breath (dyspnea) during exertion or when attempting to lie down flat', critical: true },
-      { text: 'Persistent fatigue, weakness, and overall decreased physical endurance', critical: false },
-      { text: 'Visible swelling (edema) in the ankles, feet, legs, or abdomen due to fluid buildup', critical: true },
-      { text: 'Chronic nocturnal coughing or dry wheezing, sometimes producing pink-tinged sputum', critical: false },
-      { text: 'Sudden, rapid weight gain (e.g., 2-3 pounds in 24 hours) from fluid retention', critical: true }
+      { text: 'Feeling out of breath, especially when walking, working, or lying flat on bed', critical: true },
+      { text: 'Feeling very tired, weak, and exhausted all the time', critical: false },
+      { text: 'Visible fluid swelling in ankles, feet, legs, or belly', critical: true },
+      { text: 'A dry, persistent cough, especially at night', critical: false },
+      { text: 'Sudden fast weight gain (1 to 2 kg in single day) because of water building up inside', critical: true }
     ],
     firstAidSteps: [
-      { step: 1, title: 'Recognize Decompensation', details: 'Understand that heart failure is chronic, but sudden worsening is a medical emergency.', isPrimary: false },
-      { step: 2, title: 'Check Weight and Fluid Indicators', details: 'Track daily weight carefully. Sudden rapid swings require immediate notify-of-cardiologist to adjust diuretics.', isPrimary: false },
-      { step: 3, title: 'Positioning for Breathing', details: 'If experiencing sudden dyspnea, sit fully upright and elevate the head with multiple pillows to lower intra-pulmonary fluid pressure.', isPrimary: true },
-      { step: 4, title: 'Seek Immediate Crisis Care', details: 'If struggling to breathe, having blue lips or fingertips, or experiencing rapid heartbeat with chest pain, call 911 immediately.', isPrimary: true }
+      { step: 1, title: 'Know the Signs of Worsening', details: 'Understand that heart failure is slowly progressive, but sudden breathing trouble means you must go to a hospital immediately.', isPrimary: false },
+      { step: 2, title: 'Check Weight and Swelling Daily', details: 'Check if legs are looking more swollen. Sudden weight gain means there is too much water trapped in the body.', isPrimary: false },
+      { step: 3, title: 'Sit Up Straight to Breathe', details: 'If you suddenly feel out of breath, sit fully upright in a chair or prop up your back with 3 or 4 pillows. Do not lie down flat.', isPrimary: true },
+      { step: 4, title: 'Go to a Doctor or Clinic', details: 'If it is very hard to breathe, or if lips and nails are turning blue, call 112 / 108 or go to the nearest emergency ward immediately.', isPrimary: true }
     ],
     causes: [
-      'Uncontrolled high blood pressure (forcing the heart to work too hard)',
-      'Coronary Artery Disease and scarred tissue from previous heart attacks',
-      'Valvular heart disease (leaky or narrowed heart valves)',
-      'Chronic conditions like diabetes, thyroid dysfunction, or heavy alcohol use'
+      'Long-term high blood pressure that was not treated with medicine',
+      'Damaged heart muscle from a previous heart attack',
+      'Damaged, narrow, or leaky heart valves',
+      'Heavy drinking of alcohol over many years'
     ],
     mythVsFact: [
       {
-        myth: 'Heart failure means the heart has completely stopped beating or is on the absolute verge of stopping.',
-        fact: 'Heart failure simply means the heart is not pumping as efficiently as it should. Many people live active, fulfilling, long lives with heart failure by managing it with prescribed lifestyle steps, medications, and cardiac monitoring.'
+        myth: 'Heart failure means your heart is about to completely stop beating.',
+        fact: 'No. The heart is still working, but it is just weaker than normal. Many people live very active, long, and happy lives by taking their heart pills every day.'
       },
       {
-        myth: 'There is nothing you can do about heart failure other than complete bed rest.',
-        fact: 'Structured physical exercise (cardiac rehab) is actually highly recommended to tone the rest of the circulatory system. Rest is vital during acute flares, but consistent, light cardiovascular movement is beneficial.'
+        myth: 'If you have heart failure, you must stay in bed forever.',
+        fact: 'No! Light walking and simple exercises are actually very good to keep your body strong. Only rest when you feel active shortness of breath.'
       }
     ]
   }
@@ -123,97 +123,97 @@ export const conditions: ConditionDetail[] = [
 export const simulationScenarios: SimulationScenario[] = [
   {
     id: 'scen-1',
-    title: 'The Unresponsive Jogger',
-    setting: 'Suburban Park Pathway',
-    description: 'You are walking in a park on a sunny afternoon. Suddenly, a jogger ahead of you slows down, stumbles, and collapses onto the grass. They do not make any sound. As you run over to help, you notice they are completely motionless.',
+    title: 'The Unresponsive jogger',
+    setting: 'Walking Path in a Park',
+    description: 'You are walking in a park on a sunny afternoon. Suddenly, a jogger in front of you slows down, stumbles, and falls flat onto the grass. They make no sound. As you run over to help, you notice they are completely motionless and silent.',
     symptomClues: [
-      'Sudden collapse during exercise',
-      'Completely unresponsive when you tap their shoulder and shout',
-      'Not breathing, or only occasionally making strange, irregular gasping noises and snoring sounds'
+      'Sudden fall/collapse while moving',
+      'Completely asleep: they do not answer when you shake their shoulders and shout',
+      'Not breathing at all, or only making occasional strange snoring or gasping noises'
     ],
     targetedCondition: 'cardiac-arrest',
     choices: [
       {
         id: 'c1-a',
-        text: 'Assume they are just exhausted, roll them on their side to catch their breath, and wait to see if they wake up.',
+        text: 'Assume they are just tired. Roll them on their side to rest, and wait to see if they wake up on their own.',
         isCorrect: false,
-        explanation: 'Incorrect. Sudden collapse with unresponsiveness and abnormal gasping indicating agonal breathing is a hallmark of Cardiac Arrest—a massive emergency. Waiting even 1-2 minutes without starting compressions dramatically reduces survival rates.'
+        explanation: 'Incorrect! Falling down suddenly and not responding is a massive danger sign. If a person is gasping or not breathing, waiting even 1 or 2 minutes without helping can cause permanent death. You must act immediately!'
       },
       {
         id: 'c1-b',
-        text: 'Shout for someone to find an AED. Call 911 immediately, put your phone on speaker, and immediately start firm, rapid chest compressions in the center of the chest.',
+        text: 'Heal your voice! Call 112 / 108 immediately, put your phone on speaker so you can talk, and start pushing down hard and fast on the center of their chest.',
         isCorrect: true,
-        explanation: 'Correct! This is a textbook case of Cardiac Arrest. Rapid recognition, immediate 911 activation, sending someone for a nearby AED, and instant hands-only CPR (compressing hard and fast at 100-120 BPM) are the absolute keys to survival.'
+        explanation: 'Correct! This is a Cardiac Arrest. Calling 112 or 108 immediately and starting CPR (pushing hard and fast on the chest) keeps blood flowing and can save their life!'
       },
       {
         id: 'c1-c',
-        text: 'Look for an aspirin in your bag, try to place it under their tongue, and check their pockets for an inhaler to help them breathe.',
+        text: 'Try to force an aspirin pill into their mouth, or search their pockets to see if they have any inhalers to blow into their nose.',
         isCorrect: false,
-        explanation: 'Incorrect. An unconscious, non-breathing patient cannot safely swallow or take oral medications. Putting items or your fingers in an unresponsive person\'s mouth poses a severe choking hazard. You must start CPR immediately.'
+        explanation: 'Incorrect. Never put any water, food, or pills into the mouth of a person who is passed out. They can easily choke on it. Start chest presses immediately instead!'
       }
     ]
   },
   {
     id: 'scen-2',
-    title: 'An Unfinished Dinner',
+    title: 'A Sudden Pain at Dinner',
     setting: 'Family Restaurant',
-    description: 'During a family dinner, your 58-year-old relative suddenly stops eating. They lean back, rubbing their chest with their fist. They look pale and are starting to break out in a noticeable cold sweat, despite the air-conditioned room. When you ask if they are okay, they whisper that they feel heavy pressure, like an elephant is sitting on their chest.',
+    description: 'During a family dinner, your elder relative suddenly stops eating. They lean back in their chair, rubbing their chest with their fist. They look very pale and are sweating heavily, even though the room is cool. They whisper that they feel a heavy pressure, like an elephant is sitting on their chest.',
     symptomClues: [
-      'Severe pressure/tightness in the center of the chest',
-      'Paleness and cold, clammy sweat',
-      'The person remains fully conscious and talking, but is in visible distress'
+      'Severe pressure, tightness, or pain in the middle of the chest',
+      'Pale face and cold, sticky sweat',
+      'The person is fully awake and talking, but is in a lot of pain'
     ],
     targetedCondition: 'heart-attack',
     choices: [
       {
         id: 'c2-a',
-        text: 'Drive them home immediately so they can rest in their bed and take an antacid, assuming it is severe indigestion from dinner.',
+        text: 'Drive them home in your own car so they can sleep, and give them a gas pill assuming it is just acidity from dinner.',
         isCorrect: false,
-        explanation: 'Incorrect. Heavy, pressure-like chest pain paired with pale skin and a cold sweat are classic, hazardous symptoms of a Heart Attack. Delaying treatment or driving them yourself in a personal car is dangerous. If they go into cardiac arrest while you are driving, you cannot administer CPR safely.'
+        explanation: 'Incorrect! Heavy chest pain, pale skin, and cold sweat are serious warning signs of a Heart Attack. Delaying or driving them yourself is dangerous. If their heart stops while you are driving, you cannot do CPR. Always call an ambulance.'
       },
       {
         id: 'c2-b',
-        text: 'Call 911 immediately. Have them sit down comfortably in a resting position. Keep them calm, ask if they have an aspirin available to chew, and monitor them closely until paramedics arrive.',
+        text: 'Call 112 / 108 immediately. Have them sit down comfortably to rest. Keep them calm, ask if they have an aspirin pill to chew, and stay with them until the ambulance arrives.',
         isCorrect: true,
-        explanation: 'Correct! For an active, conscious patient experiencing heart attack symptoms, calling 911 immediately is the primary action. Chewing an aspirin helps inhibit platelets to reduce clot growth. Keeping them calm and seated decreases myocardial oxygen consumption.'
+        explanation: 'Correct! If a person is awake but having a heart attack, call 112 or 108 immediately, make them sit down to rest, and give them an aspirin to chew. This is the safest thing to do.'
       },
       {
         id: 'c2-c',
-        text: 'Immediately lay them flat on the floor, tell everyone to back away, and begin loud chest compressions on their chest.',
+        text: 'Make them lie down flat on the hard floor, tell everyone to stand back, and start pushing hard on their chest.',
         isCorrect: false,
-        explanation: 'Incorrect. If the person is fully conscious, conversing, and breathing normally, they do NOT need CPR (chest compressions). Doing compressions on a conscious person causes unnecessary pain and potential fracture. CPR is strictly for unconscious, non-breathing victims.'
+        explanation: 'Incorrect! If the person is awake, talking, and breathing, they do NOT need chest presses (CPR). Chest presses on an awake person can break their ribs and cause severe pain. Only start CPR if they pass out and stop breathing.'
       }
     ]
   },
   {
     id: 'scen-3',
-    title: 'The Heavy Ankles',
+    title: 'The Swollen Ankles',
     setting: 'Grandfather\'s Living Room',
-    description: 'You visit your grandfather who has a history of high blood pressure. You notice his ankles and feet look extremely swollen, pillowing over his shoes. He mentions he hasn\'t been sleeping well because he gets very short of breath whenever he lies down flat on the bed, requiring him to stack 3 or 4 pillows to sleep at night. He is also easily exhausted just walking to the kitchen.',
+    description: 'You visit your grandfather. You notice his ankles and feet look very swollen and puffy, pouring over his shoes. He tells you he cannot sleep well because he gets flat out of breath whenever he lies down flat on the bed, forcing him to use 3 or 4 pillows to keep his head high. He also gets tired just walking to the kitchen.',
     symptomClues: [
-      'Observable fluid swelling (edema) in ankles/feet',
-      'Difficulty breathing when lying flat, needing to prop up with pillows',
-      'Chronic persistent fatigue and very low physical endurance'
+      'Visible water swelling (edema) in ankles and feet',
+      'Trouble breathing when lying down flat, needing to sleep propped up',
+      'Feeling very tired and weak during normal walking'
     ],
     targetedCondition: 'heart-failure',
     choices: [
       {
         id: 'c3-a',
-        text: 'Recognize this as progressive Heart Failure. Help him sit upright or elevated, help him record his daily weight, and coordinate an urgent consultation with his cardiologist to adjust his medications.',
+        text: 'Recognize this as a weak heart pump (Heart Failure). Help him sit up straight, check if his legs are swollen, and arrange a visit to his heart doctor soon to check his daily pills.',
         isCorrect: true,
-        explanation: 'Correct! These are progressive indicator signs of Heart Failure (fluid congestion and decreased mechanical pumping power). Sitting upright relieves pulmonary fluid congestion. Urgent medical supervision and medication adjustment (such as adjusting diuretics) are the safe path.'
+        explanation: 'Correct! Swollen legs and breathing trouble when lying flat are classic signs of a weak heart (Heart Failure). Sitting upright helps him breathe better. He needs a doctor to check and adjust his daily water-reducing pills soon.'
       },
       {
         id: 'c3-b',
-        text: 'Assume they are suffering from an acute cardiac arrest, lay them down on the floor completely flat, and prepare to deliver high-voltage AED shocks.',
+        text: 'Assume they are having an active cardiac arrest, pull them down to sleep completely flat on the floor, and look for a heart shock machine.',
         isCorrect: false,
-        explanation: 'Incorrect. He is awake, alert, and tracking conversations. This is chronic progressive Heart Failure rather than sudden electrical Cardiac Arrest. Laying him completely flat will actually make his shortness of breath significantly worse, as fluid pools in his lungs.'
+        explanation: 'Incorrect! He is awake and talking to you. This is stable, long-term Heart Failure, not a sudden cardiac arrest. Do not make him lie flat on the floor, as flat lying makes it much harder to breathe!'
       },
       {
         id: 'c3-c',
-        text: 'Tell him to drink several large glasses of water to flush out his kidneys, walk 2 miles around the neighborhood to work off the leg swelling, and take some aspirin for the aching ankles.',
+        text: 'Tell him to drink 5 big glasses of water to clean his kidneys, and ask him to walk 2 miles to sweat out the foot swelling.',
         isCorrect: false,
-        explanation: 'Incorrect. In heart failure, the body is already overloaded with fluid (visible edema). Drinking excessive water can dangerously overload his failing heart. Forcing heavy physical exercise while he is actively decompensating is dangerous. Fluid restriction and medical help are required.'
+        explanation: 'Incorrect! In heart failure, the heart is too weak, and water is already trapping in the body. Drinking extra water or forcing them to run/walk a long distance will exhaust the weak heart and is highly dangerous.'
       }
     ]
   }
@@ -222,62 +222,62 @@ export const simulationScenarios: SimulationScenario[] = [
 export const quizQuestions: QuizQuestion[] = [
   {
     id: 1,
-    question: 'Which condition is fundamentally a "circulation" problem caused by a blocked vessel blocking oxygen flow to the muscle?',
+    question: 'Which heart condition is a "blocked pipes" problem where blood cannot reach the heart muscle?',
     options: [
-      'Heart Attack',
-      'Cardiac Arrest',
-      'Heart Failure',
-      'Cardiomyopathy'
+      'Heart Attack (Blocked blood pipe)',
+      'Cardiac Arrest (Heart suddenly stops)',
+      'Heart Failure (Weak pump)',
+      'Gas/Acidity problem'
     ],
     correctIndex: 0,
-    explanation: 'A Heart Attack is caused by a blocked coronary artery (a plumbing issue) preventing oxygen-rich blood from reaching heart tissue. The heart muscle begins to die, but the heart itself keeps beating.'
+    explanation: 'A Heart Attack is a blood flow problem. A pipe is clogged so blood cannot reach the heart muscle. The heart keeps beating, but the muscle gets injured.'
   },
   {
     id: 2,
-    question: 'What is the absolute immediate primary first-aid action for someone in Cardiac Arrest?',
+    question: 'What is the absolute immediate first thing you should do if someone passes out suddenly, is not responding, and is not breathing?',
     options: [
-      'Give them a glass of warm water and check their vitals',
-      'Have them chew a single baby aspirin',
-      'Call 911 instantly, send someone for an AED, and start immediate chest compressions',
-      'Apply an ice pack to their forehead and elevate their feet'
+      'Give them a glass of water',
+      'Call 112 or 108 immediately, and start pushing hard and fast on their chest (CPR)',
+      'Let them sleep and wait for them to wake up',
+      'Rub their feet with oil'
     ],
-    correctIndex: 2,
-    explanation: 'Cardiac Arrest is an electrical blackout where the heart stops completely. Brain damage begins in 4 minutes and death follows soon after. Immediate activation of 911, retrieving an AED, and starting high-quality chest compressions (hands-only CPR) are required immediately.'
+    correctIndex: 1,
+    explanation: 'If a person collapses, does not answer, and is not breathing, their heart has stopped. You must call 112 or 108 instantly and start pushing hard and fast in the center of their chest to save their life!'
   },
   {
     id: 3,
-    question: 'How does Heart Failure differ from both Heart Attack and Cardiac Arrest?',
+    question: 'How is Heart Failure different from a Heart Attack or Cardiac Arrest?',
     options: [
-      'It means the heart has completely stopped beating and the patient has collapsed',
-      'It is a chronic, progressive condition where the heart still beats, but is too weak or stiff to pump blood effectively',
-      'It only affects the outer skin and nervous systems of the body, leaving the cardiovascular system intact',
-      'It is characterized by sudden electrical chaotic spasms that require instant shock treatment'
+      'It means the heart has completely stopped beating instantly',
+      'It is a long-term condition where the heart still beats, but it is too weak or tired to pump blood well',
+      'It is a minor problem that goes away in 5 minutes with water',
+      'It is a sudden electricity problem'
     ],
     correctIndex: 1,
-    explanation: 'During Heart Failure, the heart has NOT stopped beating, nor is it suffering from a sudden vital stoppage. Instead, the muscle is chronically weakened or stiffened (mechanical insufficiency), meaning it cannot circulate blood efficiently, leading to chronic fatigue and fluid accumulation.'
+    explanation: 'In Heart Failure, the heart has NOT stopped. It is simply too weak or tired to pump blood around the body properly. This is a long-term issue managed with doctor medicines.'
   },
   {
     id: 4,
-    question: 'Why do heart failure patients often sleep propped up with multiple pillows or in a recliner chair?',
+    question: 'Why do weak heart (Heart Failure) patients sleep using many pillows to keep their head high?',
     options: [
-      'Because sleeping flat causes the heart to undergo severe electrical arrhythmias',
-      'To prevent the blood from clotting inside their lower leg arteries',
-      'Because lying flat allows fluid to accumulate in their lungs, making it extremely difficult to breathe',
-      'Simply because it is more comfortable for neck muscles to maintain posture'
+      'Because lying flat on the bed makes water pool in their lungs, making it very hard to breathe',
+      'To prevent their neck from hurting',
+      'Because it keeps their feet warm',
+      'To prevent sudden heart sleep snoring'
     ],
-    correctIndex: 2,
-    explanation: 'When lying flat, gravity allows interstitial fluids from the lower body to redistribute and accumulate in the chest and lungs (pulmonary congestion). Propping up with pillows keeps the fluid settled in lower portions, making breathing significantly easier during rest.'
+    correctIndex: 0,
+    explanation: 'When lying flat on the bed, gravity allows trapped body fluids to move up and settle in the lungs, making it very hard to breathe. Propping up with pillows keeps the fluid down, making breathing much easier.'
   },
   {
     id: 5,
-    question: 'If a person collapses, is completely unresponsive, but is making irregular gasping/snoring sounds (agonal breathing), what is likely happening?',
+    question: 'If a person falls down, is sleeping, does not answer, but makes deep snoring or irregular "gasping" sounds, what should you do?',
     options: [
-      'They have simply fallen into a deep, healthy sleep and should be left alone',
-      'They are having an indigestion reflux event and should chew an antacid',
-      'They are undergoing Sudden Cardiac Arrest; the gasping is a reflex and they need immediate CPR',
-      'They are having a mild heart attack and only need an aspirin'
+      'Ignore it as they are just deep snoring',
+      'Assume they are choke snoring and pour water in their mouth',
+      'Treat it as Cardiac Arrest (heart has stopped) and start chest presses immediately',
+      'Throw cold water on their face'
     ],
     correctIndex: 2,
-    explanation: 'Agonal breathing (gasping, snorting, or labored sighs) is a brainstem reflex that occurs post-collapse in up to 40% of Sudden Cardiac Arrest events. It is NOT breathing. It must be treated as Cardiac Arrest—start chest compressions instantly!'
+    explanation: 'Strange, irregular gasping or snoring sounds right after falling down is agonal breathing. This means the brain is dying and the heart has stopped! You must treat it as Cardiac Arrest and start chest presses immediately.'
   }
 ];
