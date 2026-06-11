@@ -113,7 +113,7 @@ Respond in English. Keep answers structured, highly readable, reassuring, and co
       } else if (lastUserMsg.includes("cpr") || lastUserMsg.includes("arrest")) {
         reply = `### Cardiac Arrest & CPR Lifeline Facts:\n\n*   **Cardiac Arrest**: An electrical failure causing heart rhythm to stop entirely. Immediate action is critical.\n*   **Response**: Dial **112** (All-India Emergency) or **108** (Ambulance) instantly!\n*   **CPR Rhythm**: Push hard and fast in the center of the chest at 100–120 compressions per minute to manually preserve blood flow to the brain as medical dispatch arrives.`;
       } else {
-        reply = `### Sajivani Clinical Wellness Note:\n\n*   **Diagnostic Integrity**: Cardiological records require evaluation alongside clinical examinations by an active medical practitioner.\n*   **Critical Action**: If you or someone nearby is experiencing active radiating pain, cold sweats, or breathing struggles, do not wait—please call Indian emergency dispatches **108** or **112** immediately.`;
+        reply = `### Sanjivani Clinical Wellness Note:\n\n*   **Diagnostic Integrity**: Cardiological records require evaluation alongside clinical examinations by an active medical practitioner.\n*   **Critical Action**: If you or someone nearby is experiencing active radiating pain, cold sweats, or breathing struggles, do not wait—please call Indian emergency dispatches **108** or **112** immediately.`;
       }
       return res.json({ text: reply, isMock: true });
     }
