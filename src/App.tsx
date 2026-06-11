@@ -94,7 +94,7 @@ export default function App() {
               {t.general.taglineSubtitle}
             </p>
             <p className="text-sm sm:text-base text-slate-600 max-w-xl mx-auto font-sans leading-relaxed">
-              An advanced, interactive cardiac educational study and bystander support companion. Trace coronary parameters, grade symptoms, and find surrounding critical care services with live GPS routing.
+              Learn how to protect your heart, check your heart symptoms in simple steps, and find the closest medical help immediately.
             </p>
           </div>
         </header>
@@ -253,14 +253,14 @@ export default function App() {
                 <span className="font-extrabold text-base tracking-tight text-slate-900 block leading-tight">Sanjivani AI</span>
               </div>
               <p className="text-sm text-slate-600 max-w-xl font-sans">
-                Sanjivani AI is designed to empower bystanders with clinical protocols to handle critical cardiac emergencies.
+                Sanjivani AI is designed to help any normal person save lives during sudden heart emergencies.
               </p>
             </div>
 
             {/* Standards Alignment Title only - clean, no pulse/active lights */}
             <div className="text-left md:text-right">
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-xs font-mono font-bold border border-slate-200">
-                AHA COMPLIANT PROTOCOLS
+                EASY LIFE-SAVING GUIDE
               </span>
             </div>
           </div>
@@ -271,7 +271,7 @@ export default function App() {
               <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
               <div className="space-y-1">
                 <div className="text-xs font-bold text-slate-900 tracking-wider uppercase font-mono">
-                  Clinical Disclaimer & Close Agreement
+                  Important Learning Disclaimer
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-sans">
                   {t.general.footerDisclaimer}
@@ -315,10 +315,10 @@ export default function App() {
               </div>
               <div className="font-sans">
                 <span className="text-[10px] font-mono tracking-widest text-red-400 font-extrabold uppercase block">
-                  🚨 Sanjivani Rescuer Emergency Triage Mode
+                  🚨 Patient Emergency Medical Card
                 </span>
                 <h3 className="text-lg sm:text-xl font-black text-white leading-tight tracking-tight mt-0.5">
-                  Scanned Patient Medical Passport
+                  Emergency Health Details
                 </h3>
               </div>
             </div>
@@ -329,14 +329,14 @@ export default function App() {
               {/* Patient Identity Header block */}
               <div className="bg-slate-950 p-4 rounded-2xl border border-slate-800/80 text-left space-y-1">
                 <span className="text-[9px] font-mono tracking-wider font-bold text-slate-400 block uppercase">
-                  Verified Patient Identity
+                  Patient Name
                 </span>
                 <p className="text-xl sm:text-2xl font-black text-rose-500 leading-tight">
                   {triageRecord.name}
                 </p>
                 <div className="flex items-center gap-1.5 text-xs text-slate-400 font-mono mt-1 font-bold">
                   <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Sanjivani Cryptographically Decoded</span>
+                  <span>Verified Medical ID Checked</span>
                 </div>
               </div>
 
@@ -368,14 +368,14 @@ export default function App() {
                 
                 <div className="flex items-center gap-2 text-red-500 font-extrabold font-mono text-[10px] tracking-wider uppercase border-b border-slate-800 pb-2">
                   <AlertOctagon className="w-4 h-4 text-red-500" />
-                  <span>Critical Medical Contraindications</span>
+                  <span>Crucial Medical Warnings</span>
                 </div>
 
                 <div className="space-y-3 pt-1 text-xs sm:text-sm text-left">
                   {/* Cardiac history */}
                   <div className="grid grid-cols-1 gap-0.5">
                     <span className="text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-                      Diagnosed Cardiac Conditions:
+                      Known Heart Illnesses:
                     </span>
                     <p className="text-slate-200 font-semibold leading-relaxed font-sans">
                       {triageRecord.conditions}
@@ -385,7 +385,7 @@ export default function App() {
                   {/* Active Meds */}
                   <div className="grid grid-cols-1 gap-0.5 border-t border-slate-850 pt-2.5">
                     <span className="text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-                      Active Prescriptions & Regimen:
+                      Medicines Taken Daily:
                     </span>
                     <p className="text-sky-400 font-bold leading-relaxed font-sans">
                       {triageRecord.meds}
@@ -395,7 +395,7 @@ export default function App() {
                   {/* Allergies */}
                   <div className="grid grid-cols-1 gap-0.5 border-t border-slate-850 pt-2.5">
                     <span className="text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-                      Severe Drug Allergies:
+                      Bad Drug Allergies:
                     </span>
                     <p className="text-amber-400 font-extrabold leading-relaxed font-sans">
                       {triageRecord.allergies}
@@ -406,7 +406,7 @@ export default function App() {
                   {triageRecord.extra && triageRecord.extra !== 'None' && triageRecord.extra.trim() !== '' && (
                     <div className="grid grid-cols-1 gap-0.5 border-t border-slate-800 pt-2.5 text-slate-350">
                       <span className="text-slate-400 font-bold uppercase text-[10px] tracking-wider">
-                        First-Responder Directives:
+                        Special Notes for Helpers:
                       </span>
                       <p className="font-semibold italic leading-relaxed text-slate-300">
                         "{triageRecord.extra}"
