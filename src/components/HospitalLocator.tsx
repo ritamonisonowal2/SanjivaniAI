@@ -67,13 +67,13 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
     },
     {
       id: 'm-3',
-      name: 'Sanjivani Cardiac Care Clinic - Bandra West',
+      name: 'Sajivani Cardiac Care Clinic - Bandra West',
       lat: 19.0585,
       lng: 72.8305,
       address: 'Turner Hill Road, Near Bandra Station, Mumbai 400050',
       type: 'clinic',
       phone: '+91 22 2640 1004',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'no',
       distance: 2.1
     }
@@ -105,13 +105,13 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
     },
     {
       id: 'd-3',
-      name: 'Sanjivani Heart Specialist Ward - Connaught Place',
+      name: 'Sajivani Heart Specialist Ward - Connaught Place',
       lat: 28.6300,
       lng: 77.2185,
       address: 'Kasturba Gandhi Marg, Near CP Circle, New Delhi 110001',
       type: 'clinic',
       phone: '+91 11 4350 2004',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'no',
       distance: 0.9
     }
@@ -143,13 +143,13 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
     },
     {
       id: 'b-3',
-      name: 'Sanjivani Cardiac Unit - Indiranagar',
+      name: 'Sajivani Cardiac Unit - Indiranagar',
       lat: 12.9785,
       lng: 77.6385,
       address: '100 Feet Road, HAL 2nd Stage, Indiranagar, Bengaluru 560038',
       type: 'clinic',
       phone: '+91 80 4124 1004',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'no',
       distance: 1.9
     }
@@ -181,13 +181,13 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
     },
     {
       id: 'p-3',
-      name: 'Sanjivani Specialist Ward - Shivajinagar',
+      name: 'Sajivani Specialist Ward - Shivajinagar',
       lat: 18.5285,
       lng: 73.8505,
       address: 'Jangali Maharaj Road, Shivajinagar, Pune 411005',
       type: 'clinic',
       phone: '+91 20 2553 1004',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'no',
       distance: 2.0
     }
@@ -219,91 +219,125 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
     },
     {
       id: 'a-3',
-      name: 'Sanjivani Cardiac Center - Satellite',
+      name: 'Sajivani Cardiac Center - Satellite',
       lat: 23.0245,
       lng: 72.5320,
       address: 'Satellite Road, Jodhpur Cross Road, Ahmedabad 380015',
       type: 'clinic',
       phone: '+91 79 2692 1004',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'no',
       distance: 1.8
     }
   ],
-  gorakhpur: [
+  northeast: [
     {
-      id: 'gkp-1',
-      name: 'Baba Raghav Das (BRD) Medical College & Cardiac Emergency',
-      lat: 26.7909,
-      lng: 83.3758,
-      address: 'Medical College Road, Moglaha, Gorakhpur, Uttar Pradesh 273013',
+      id: 'ne-1',
+      name: 'Gauhati Medical College & Hospital (GMCH)',
+      lat: 26.1814,
+      lng: 91.7458,
+      address: 'Bhangagarh, Guwahati, Assam 781032',
       type: 'hospital',
-      phone: '+91 551 250 1701',
-      website: 'https://brdmc.org',
+      phone: '+91 361 252 9457',
+      website: 'https://gmch.assam.gov.in',
       emergency: 'yes',
-      distance: 1.0
+      distance: 0
     },
     {
-      id: 'gkp-2',
-      name: 'Sanjivani Affiliate - Gorakhpur Heart & Intensive Care Clinic',
-      lat: 26.7592,
-      lng: 83.3732,
-      address: 'Park Road, Civil Lines, Gorakhpur, Uttar Pradesh 273001',
-      type: 'clinic',
-      phone: '+91 551 220 8900',
-      website: 'https://sanjivani.ai',
-      emergency: 'no',
-      distance: 2.1
+      id: 'ne-2',
+      name: 'Dispur Hospital',
+      lat: 26.1361,
+      lng: 91.8007,
+      address: 'Dispur, Guwahati, Assam 781006',
+      type: 'hospital',
+      phone: '+91 361 222 3699',
+      website: undefined,
+      emergency: 'yes',
+      distance: 0
     },
     {
-      id: 'gkp-3',
-      name: 'Sahara Hospital & Cardiac Care Unit - Gorakhpur Branch',
-      lat: 26.7420,
-      lng: 83.3850,
-      address: 'TP Nagar Road, Near Golghar, Gorakhpur, Uttar Pradesh 273001',
+      id: 'ne-3',
+      name: 'Downtown Hospital Guwahati',
+      lat: 26.1271,
+      lng: 91.8000,
+      address: 'Dispur, Guwahati, Assam 781006',
       type: 'hospital',
-      phone: '+91 551 234 4545',
-      website: 'https://saharahospitals.com',
+      phone: '+91 361 233 0000',
+      website: 'https://www.downtownhospitals.com',
       emergency: 'yes',
-      distance: 3.5
-    }
-  ],
-  lucknow: [
-    {
-      id: 'lko-1',
-      name: 'Sanjay Gandhi Postgraduate Institute of Medical Sciences (SGPGI) - Cardiology',
-      lat: 26.7570,
-      lng: 80.9388,
-      address: 'New PMSSY Block, Raebareli Road, Lucknow, Uttar Pradesh 226014',
-      type: 'hospital',
-      phone: '+91 522 266 8700',
-      website: 'https://sgpgi.org.in',
-      emergency: 'yes',
-      distance: 1.2
+      distance: 0
     },
     {
-      id: 'lko-2',
-      name: 'King George\'s Medical University (KGMU) Cardiology & Lari Cardiology Center',
-      lat: 26.8687,
-      lng: 80.9234,
-      address: 'Shah Mina Road, Chowk, Lucknow, Uttar Pradesh 226003',
+      id: 'ne-4',
+      name: 'Tinsukia Civil Hospital',
+      lat: 27.4910,
+      lng: 95.3607,
+      address: 'AT Road, Tinsukia, Assam 786125',
       type: 'hospital',
-      phone: '+91 522 225 7450',
-      website: 'https://kgmu.org',
+      phone: '+91 374 233 2332',
+      website: undefined,
       emergency: 'yes',
-      distance: 2.8
+      distance: 0
+    },
+    {
+      id: 'ne-5',
+      name: 'Dibrugarh Medical College & Hospital (AMCH)',
+      lat: 27.4728,
+      lng: 94.8950,
+      address: 'Barbari, Dibrugarh, Assam 786002',
+      type: 'hospital',
+      phone: '+91 373 232 0286',
+      website: undefined,
+      emergency: 'yes',
+      distance: 0
+    },
+    {
+      id: 'ne-6',
+      name: 'Jorhat Medical College & Hospital (JMCH)',
+      lat: 26.7509,
+      lng: 94.2037,
+      address: 'Jail Road, Jorhat, Assam 785001',
+      type: 'hospital',
+      phone: '+91 376 232 0555',
+      website: undefined,
+      emergency: 'yes',
+      distance: 0
+    },
+    {
+      id: 'ne-7',
+      name: 'NEIGRIHMS Shillong',
+      lat: 25.5630,
+      lng: 91.8933,
+      address: 'Mawdiangdiang, Shillong, Meghalaya 793018',
+      type: 'hospital',
+      phone: '+91 364 253 8033',
+      website: 'https://www.neigrihms.gov.in',
+      emergency: 'yes',
+      distance: 0
+    },
+    {
+      id: 'ne-8',
+      name: 'Silchar Medical College & Hospital (SMCH)',
+      lat: 24.8190,
+      lng: 92.7960,
+      address: 'Ghungoor, Silchar, Assam 788014',
+      type: 'hospital',
+      phone: '+91 384 223 3333',
+      website: undefined,
+      emergency: 'yes',
+      distance: 0
     }
   ],
   default: [
     {
       id: 'f-1',
-      name: 'Sanjivani Advanced Cardiac Care Center',
+      name: 'Sajivani Advanced Cardiac Care Center',
       lat: 19.0760,
       lng: 72.8777,
       address: '150 Health Science Boulevard, Bandra East, Mumbai, MH 400051',
       type: 'hospital',
       phone: '+91 22 2410 7000',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'yes',
       distance: 0.25
     },
@@ -315,7 +349,7 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
       address: '450 Santacruz Link Road, Kurla, Mumbai 400070',
       type: 'emergency_room',
       phone: '+91 22 6698 6666',
-      website: 'https://sanjivani.ai',
+      website: 'https://sajivani.ai',
       emergency: 'yes',
       distance: 0.95
     }
@@ -325,60 +359,29 @@ const METRO_FALLBACK_DATA: Record<string, HealthcarePlace[]> = {
 const ALL_INDIA_HOSPITALS: HealthcarePlace[] = [
   ...METRO_FALLBACK_DATA.mumbai,
   ...METRO_FALLBACK_DATA.delhi,
-  ...METRO_FALLBACK_DATA.gorakhpur,
-  ...METRO_FALLBACK_DATA.lucknow,
   ...METRO_FALLBACK_DATA.bengaluru,
   ...METRO_FALLBACK_DATA.pune,
   ...METRO_FALLBACK_DATA.ahmedabad,
-  {
-    id: 'vns-1',
-    name: 'Sir Sundarlal Hospital (BHU) Cardiology Department',
-    lat: 25.2750,
-    lng: 82.9995,
-    address: 'Banaras Hindu University Campus, Varanasi, Uttar Pradesh 221005',
-    type: 'hospital',
-    phone: '+91 542 236 9226',
-    website: 'https://bhu.ac.in',
-    emergency: 'yes',
-    distance: 1.2
-  },
-  {
-    id: 'pat-1',
-    name: 'Indira Gandhi Institute of Medical Sciences (IGIMS) - Cardiac Care',
-    lat: 25.6175,
-    lng: 85.0877,
-    address: 'Allahabadi Road, Sheikhpura, Patna, Bihar 800014',
-    type: 'hospital',
-    phone: '+91 612 229 7631',
-    website: 'http://www.igims.org',
-    emergency: 'yes',
-    distance: 1.2
-  },
-  {
-    id: 'ccu-1',
-    name: 'SSKM Hospital & IPGMER Cardiology Block',
-    lat: 22.5393,
-    lng: 88.3444,
-    address: '244 AJC Bose Road, Kolkata, West Bengal 700020',
-    type: 'hospital',
-    phone: '+91 33 2204 1100',
-    website: 'https://ipgmer.gov.in',
-    emergency: 'yes',
-    distance: 1.2
-  },
-  {
-    id: 'hyd-1',
-    name: 'Nizams Institute of Medical Sciences (NIMS) - Cardiology Department',
-    lat: 17.4190,
-    lng: 78.4485,
-    address: 'Punjagutta, Hyderabad, Telangana 500082',
-    type: 'hospital',
-    phone: '+91 40 2348 9000',
-    website: 'https://nims.edu.in',
-    emergency: 'yes',
-    distance: 1.2
-  }
+  ...METRO_FALLBACK_DATA.northeast
 ];
+
+function getBestFallbackRegion(lat: number, lng: number): string {
+  const regions: Array<{ key: string; lat: number; lng: number }> = [
+    { key: 'northeast', lat: 26.5,    lng: 93.5  },
+    { key: 'delhi',     lat: 28.6139, lng: 77.2090 },
+    { key: 'mumbai',    lat: 19.0760, lng: 72.8777 },
+    { key: 'bengaluru', lat: 12.9716, lng: 77.5946 },
+    { key: 'pune',      lat: 18.5204, lng: 73.8567 },
+    { key: 'ahmedabad', lat: 23.0225, lng: 72.5714 },
+  ];
+  let bestKey = 'default';
+  let bestDist = Infinity;
+  for (const r of regions) {
+    const d = calculateDistance(lat, lng, r.lat, r.lng);
+    if (d < bestDist) { bestDist = d; bestKey = r.key; }
+  }
+  return bestKey;
+}
 
 function calculateDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371.0; // Radius of the Earth in kilometers
@@ -396,18 +399,19 @@ export default function HospitalLocator() {
   const t = TRANSLATIONS;
 
   const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number, lng: number }>(INDIA_DEFAULT_CENTER);
-  const [searchCenterName, setSearchCenterName] = useState<string>('');
   const [mapCenter, setMapCenter] = useState<{ lat: number, lng: number }>(INDIA_DEFAULT_CENTER);
   const [mapZoom, setMapZoom] = useState<number>(5);
+  const [locPermission, setLocPermission] = useState<'prompt' | 'granted' | 'denied'>('prompt');
   const [searchRadius, setSearchRadius] = useState<number>(50); // km
   const [isLoading, setIsLoading] = useState(false);
   const [places, setPlaces] = useState<HealthcarePlace[]>(ALL_INDIA_HOSPITALS);
   const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
-  const [apiLogs, setApiLogs] = useState<string>('Sanjivani Care Locator initialized with All India Database.');
+  const [apiLogs, setApiLogs] = useState<string>('Sajivani GPS Engine initialized with All India Database.');
   const [errorText, setErrorText] = useState<string | null>(null);
   const [selectedMetro, setSelectedMetro] = useState<string>('all');
   const [searchCity, setSearchCity] = useState('');
   const [searchState, setSearchState] = useState('');
+  const [showPermissionModal, setShowPermissionModal] = useState(false);
   const [mapType, setMapType] = useState<'streets' | 'satellite'>('streets');
 
   // Leaflet mapping states & refs
@@ -535,7 +539,7 @@ export default function HospitalLocator() {
     }
   }, [mapCenter, mapZoom]);
 
-  // 4. Staging markers and overlays (Search Center + Hospitals)
+  // 4. Staging markers and overlays (GPS + Hospitals)
   useEffect(() => {
     if (!leafletLoaded || !mapInstanceRef.current || !markersGroupRef.current) return;
     const L = (window as any).L;
@@ -543,24 +547,24 @@ export default function HospitalLocator() {
 
     markersGroupRef.current.clearLayers();
 
-    // Active Search Location Center Pointer
-    if (searchCenterName) {
-      const searchCenterHtml = `
+    // Active User Location Pointer
+    if (locPermission === 'granted') {
+      const gpsHtml = `
         <div class="relative flex items-center justify-center pointer-events-none">
-          <div class="absolute w-8 h-8 rounded-full bg-indigo-500/35 border border-indigo-400 animate-pulse"></div>
-          <div class="w-4 h-4 rounded-full bg-indigo-600 border-2 border-white shadow-md"></div>
+          <div class="absolute w-8 h-8 rounded-full bg-blue-500/35 border border-blue-400 animate-ping"></div>
+          <div class="w-4 h-4 rounded-full bg-blue-600 border-2 border-white shadow-md"></div>
         </div>
       `;
-      const searchCenterIcon = L.divIcon({
-        html: searchCenterHtml,
-        className: 'custom-search-center-icon',
+      const gpsIcon = L.divIcon({
+        html: gpsHtml,
+        className: 'custom-gps-icon',
         iconSize: [32, 32],
         iconAnchor: [16, 16]
       });
 
-      L.marker([gpsCoordinates.lat, gpsCoordinates.lng], { icon: searchCenterIcon })
+      L.marker([gpsCoordinates.lat, gpsCoordinates.lng], { icon: gpsIcon })
         .addTo(markersGroupRef.current)
-        .bindPopup(`<strong>Searched Location Center: ${searchCenterName}</strong><p style="margin:2px 0 0;font-size:10px;color:#555;">Lat: ${gpsCoordinates.lat.toFixed(4)}, Lng: ${gpsCoordinates.lng.toFixed(4)}</p>`);
+        .bindPopup(`<strong>Your Current Location</strong><p style="margin:2px 0 0;font-size:10px;color:#555;">Locked via GPS / Cellular feed</p>`);
     }
 
     // Nearby registered Healthcare services
@@ -622,7 +626,80 @@ export default function HospitalLocator() {
         }, 120);
       }
     });
-  }, [places, selectedPlaceId, gpsCoordinates, searchCenterName, leafletLoaded]);
+  }, [places, selectedPlaceId, gpsCoordinates, locPermission, leafletLoaded]);
+
+  const triggerGpsScan = () => {
+    setIsLoading(true);
+    setErrorText(null);
+    setApiLogs('Seeking exact GPS satellite connection. Please grant location access in your browser prompt...');
+
+    if (navigator.geolocation) {
+      // Stage 1: Request High Accuracy with a healthy timeout and allow cached targets to prevent lock issues
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const uCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          setGpsCoordinates(uCoords);
+          setMapCenter(uCoords);
+          setMapZoom(13);
+          setLocPermission('granted');
+          setApiLogs('GPS connection verified. Active position locked with high accuracy!');
+          setErrorText(null);
+          handleQueryOverpass(uCoords, true);
+        },
+        (err) => {
+          // If browser blocked it explicitly (code === 1), don't fallback to IP!
+          if (err.code === 1) {
+            setIsLoading(false);
+            setLocPermission('denied');
+            const specificError = 'Location access permission was denied by your browser. Please click the lock/settings icon in your browser address bar and set Location to "Allow", or click the "Open in New Tab" arrow at the top right of the preview tile to bypass iframe sandbox restrictions.';
+            setApiLogs(`GPS search failed: ${specificError}`);
+            setErrorText(specificError);
+            return;
+          }
+
+          // Stage 2: Attempt standard cell-tower/WiFi triangulation with high cache threshold
+          setApiLogs('High accuracy satellite lock slow. Checking local WiFi & cellular triangulation...');
+          navigator.geolocation.getCurrentPosition(
+            (pos2) => {
+              const uCoords = { lat: pos2.coords.latitude, lng: pos2.coords.longitude };
+              setGpsCoordinates(uCoords);
+              setMapCenter(uCoords);
+              setMapZoom(13);
+              setLocPermission('granted');
+              setApiLogs('Location locked securely using modern triangulation!');
+              setErrorText(null);
+              handleQueryOverpass(uCoords, true);
+            },
+            async (err2) => {
+              setIsLoading(false);
+              setLocPermission('denied');
+              
+              let specificError = '';
+              if (err2.code === 2) {
+                specificError = 'Device Location services/GPS is toggled OFF on your device settings. Please enable GPS on your device to locate.';
+              } else if (err2.code === 3) {
+                specificError = 'GPS connection timed out. Please try scanning again or try loaded fallbacks.';
+              } else {
+                specificError = err2.message || 'GPS trace failed.';
+              }
+
+              setApiLogs(`Both precise GPS and local triangulation failed: ${specificError}`);
+              setErrorText(specificError);
+            },
+            { enableHighAccuracy: false, timeout: 10000, maximumAge: Infinity }
+          );
+        },
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 300000 }
+      );
+    } else {
+      setIsLoading(false);
+      setLocPermission('denied');
+      setApiLogs('Precise GPS lookup unsupported by browser environment.');
+      setErrorText('Precise location lookup is not supported by your browser.');
+    }
+  };
+
+  // Pre-load with premier cardiac center database on mount without forcing unrequested GPS popups.
 
   // 3. Query OpenStreetMap Overpass with user search radius (with auto-expand and mirrors retry)
   const handleQueryOverpass = async (targetCoords = gpsCoordinates, isGpsMode = false) => {
@@ -632,21 +709,14 @@ export default function HospitalLocator() {
     const lat = targetCoords.lat;
     const lng = targetCoords.lng;
     
-    // We will start with a primary search radius (capped at 50km to keep queries reliable and fast)
-    const primaryRadius = Math.min(searchRadius, 50);
+    // We will start with a primary search radius (e.g. 25km) to keep queries lightning-fast and prevent timeouts
+    const primaryRadius = Math.min(searchRadius, 25);
     const radiusMeters = Math.round(primaryRadius * 1000);
 
     const overpassQuery = `[out:json][timeout:25];
 (
-  node["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
-  node["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
-  node["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
-  way["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
-  way["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
-  way["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
-  relation["amenity"="hospital"](around:${radiusMeters},${lat},${lng});
-  relation["amenity"="clinic"](around:${radiusMeters},${lat},${lng});
-  relation["amenity"="doctors"](around:${radiusMeters},${lat},${lng});
+  node["amenity"~"hospital|clinic|doctors|pharmacy"](around:${radiusMeters},${lat},${lng});
+  way["amenity"~"hospital|clinic|doctors|pharmacy"](around:${radiusMeters},${lat},${lng});
 );
 out center;`;
 
@@ -660,13 +730,13 @@ out center;`;
     let data: any = null;
     let fallbackToAllIndia = false;
 
-    // Sequential Mirror Retry Loop with safe, responsive timeouts
+    // Sequential Mirror Retry Loop with longer timeouts for production deployments
     for (const mirror of OVERPASS_MIRRORS) {
       const hostname = new URL(mirror).hostname;
       setApiLogs(`Plugging into OpenStreetMap server (${hostname})...`);
       const url = `${mirror}?data=${encodeURIComponent(overpassQuery)}`;
       const controller = new AbortController();
-      const tId = setTimeout(() => controller.abort(), 12000);
+      const tId = setTimeout(() => controller.abort(), 15000);
 
       try {
         const response = await fetch(url, { signal: controller.signal });
@@ -685,19 +755,15 @@ out center;`;
 
     let elements = data?.elements || [];
 
-    // Auto-Expand search: If zero results within 25km, let's try a wider 50km radius but strict to "hospital/clinic" to keep it fast!
+    // Auto-Expand search: If zero results within 25km, let's try a wider 50km radius but strict only to "hospital" tag to keep it fast!
     if (elements.length === 0 && primaryRadius < 50) {
       const expandedRadiusMeters = 50000;
       setApiLogs(`No diagnostic elements found in 25km. Expanding radial search to 50km for core hospitals...`);
       
       const expandedQuery = `[out:json][timeout:25];
 (
-  node["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
-  node["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
-  way["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
-  way["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
-  relation["amenity"="hospital"](around:${expandedRadiusMeters},${lat},${lng});
-  relation["amenity"="clinic"](around:${expandedRadiusMeters},${lat},${lng});
+  node["amenity"~"hospital|clinic|doctors"](around:${expandedRadiusMeters},${lat},${lng});
+  way["amenity"~"hospital|clinic|doctors"](around:${expandedRadiusMeters},${lat},${lng});
 );
 out center;`;
 
@@ -705,7 +771,7 @@ out center;`;
         const hostname = new URL(mirror).hostname;
         const url = `${mirror}?data=${encodeURIComponent(expandedQuery)}`;
         const controller = new AbortController();
-        const tId = setTimeout(() => controller.abort(), 12000);
+        const tId = setTimeout(() => controller.abort(), 15000);
 
         try {
           const response = await fetch(url, { signal: controller.signal });
@@ -795,10 +861,12 @@ out center;`;
   };
 
   const loadCityFallback = (metroKey: string, refCoords: { lat: number; lng: number }, isGpsMode = false) => {
-    const isUsingAllIndia = !(METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0);
-    const fallbackList = !isUsingAllIndia
-      ? METRO_FALLBACK_DATA[metroKey]
-      : ALL_INDIA_HOSPITALS;
+    // If no specific metro selected, find the closest region based on actual GPS coords
+    const resolvedKey = (METRO_FALLBACK_DATA[metroKey] && METRO_FALLBACK_DATA[metroKey].length > 0)
+      ? metroKey
+      : getBestFallbackRegion(refCoords.lat, refCoords.lng);
+
+    const fallbackList = METRO_FALLBACK_DATA[resolvedKey] || ALL_INDIA_HOSPITALS;
 
     const mapped = fallbackList.map(h => ({
       ...h,
@@ -807,10 +875,10 @@ out center;`;
     mapped.sort((a, b) => (a.distance || 0) - (b.distance || 0));
     setPlaces(mapped);
 
-    if (isUsingAllIndia) {
-      setApiLogs(`No local GPS listings resolved inside ${searchRadius}km. Plotting verified national cardiac emergency centers by distance.`);
-    } else {
+    if (resolvedKey === metroKey) {
       setApiLogs(`Displaying emergency fallback listings from regional database (${metroKey.toUpperCase()}).`);
+    } else {
+      setApiLogs(`No local OSM data found. Loading nearest verified hospitals for your region (${resolvedKey.toUpperCase()}).`);
     }
 
     if (mapped.length > 0) {
@@ -825,29 +893,40 @@ out center;`;
     }
   };
 
-  // 5. Initialize verified hospitals mapping by sorting based on the startup center
+  // 5. Automatic Geolocation Resolver on Page Load (Only utilizing explicit browser Geolocation permissions)
   useEffect(() => {
-    // Calculate fallback distances dynamically relative to current coordinates (initial INDIA_DEFAULT_CENTER)
-    const initialSorted = ALL_INDIA_HOSPITALS.map(h => ({
-      ...h,
-      distance: +calculateDistance(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, h.lat, h.lng).toFixed(2)
-    })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
-    setPlaces(initialSorted);
+    let active = true;
+
+    const autoLocate = async () => {
+      try {
+        if (navigator.permissions && navigator.permissions.query) {
+          const status = await navigator.permissions.query({ name: 'geolocation' });
+          if (status.state === 'granted') {
+            if (active) {
+              setApiLogs('Active browser GPS access verified. Pinpointing coordinates...');
+              triggerGpsScan();
+            }
+          } else {
+            setApiLogs('GPS coordinates ready. Click "Locate Nearest Hospitals" to trace via GPS.');
+          }
+        }
+      } catch (e) {
+        console.warn('Permissions query unsupported:', e);
+      }
+    };
+
+    autoLocate();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   const resetToAllIndia = () => {
-    setSearchCenterName('');
     setSelectedMetro('all');
     setMapCenter(INDIA_DEFAULT_CENTER);
     setMapZoom(5);
-    
-    // Sort and calculate distance dynamically based on INDIA_DEFAULT_CENTER
-    const resetSorted = ALL_INDIA_HOSPITALS.map(h => ({
-      ...h,
-      distance: +calculateDistance(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, h.lat, h.lng).toFixed(2)
-    })).sort((a, b) => (a.distance || 0) - (b.distance || 0));
-
-    setPlaces(resetSorted);
+    setPlaces(ALL_INDIA_HOSPITALS);
     setSelectedPlaceId(null);
     setSearchCity('');
     setSearchState('');
@@ -864,15 +943,15 @@ out center;`;
     setIsLoading(true);
     setErrorText(null);
     setSelectedMetro('search');
-    const locationQueryName = `${searchCity}${searchState ? ', ' + searchState : ''}`;
-    setApiLogs(`Geocoding coordinates for ${locationQueryName}...`);
+    setApiLogs(`Geocoding coordinates for ${searchCity}${searchState ? ', ' + searchState : ''}...`);
 
     try {
       // Prioritize global raw search first so Vercel and GitHub deployments resolve worldwide cities beautifully
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(locationQueryName)}&format=json&limit=1`, {
+      const queryStr = `${searchCity}${searchState ? ', ' + searchState : ''}`;
+      const response = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStr)}&format=json&limit=1`, {
         headers: {
           'Accept-Language': 'en',
-          'User-Agent': 'SanjivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
+          'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
         }
       });
 
@@ -886,7 +965,6 @@ out center;`;
         const lng = parseFloat(data[0].lon);
         const targetCoords = { lat, lng };
 
-        setSearchCenterName(locationQueryName);
         setGpsCoordinates(targetCoords);
         setMapCenter(targetCoords);
         setMapZoom(12);
@@ -895,11 +973,11 @@ out center;`;
         await handleQueryOverpass(targetCoords);
       } else {
         // Fallback to searching with ', India' suffix as secondary match
-        const queryStrAlt = `${locationQueryName}, India`;
+        const queryStrAlt = `${searchCity}${searchState ? ', ' + searchState : ''}, India`;
         const responseAlt = await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(queryStrAlt)}&format=json&limit=1`, {
           headers: {
             'Accept-Language': 'en',
-            'User-Agent': 'SanjivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
+            'User-Agent': 'SajivaniCardiacLocator/1.0 (sagarmaurya010@gmail.com; contact: sagarmaurya010@gmail.com)'
           }
         });
         const dataAlt = await responseAlt.json();
@@ -908,7 +986,6 @@ out center;`;
           const lng = parseFloat(dataAlt[0].lon);
           const targetCoords = { lat, lng };
 
-          setSearchCenterName(locationQueryName);
           setGpsCoordinates(targetCoords);
           setMapCenter(targetCoords);
           setMapZoom(12);
@@ -939,7 +1016,6 @@ out center;`;
     else if (metro === 'pune') coords = { lat: 18.5204, lng: 73.8567 };
     else if (metro === 'ahmedabad') coords = { lat: 23.0225, lng: 72.5714 };
 
-    setSearchCenterName(metro.toUpperCase());
     setGpsCoordinates(coords);
     setMapCenter(coords);
     setMapZoom(12);
@@ -956,23 +1032,51 @@ out center;`;
   return (
     <div className="space-y-6" id="open-care-locator-root">
       
-      {/* Search by City & State Panel with fully featured Radius selection */}
-      <div className="bg-white border border-slate-200 p-6 md:p-8 rounded-3xl shadow-sm text-left space-y-6">
-        <div className="space-y-1.5">
+      {/* Visual Workspace Subheader */}
+      <div className="bg-white border border-slate-200 p-5 rounded-3xl flex flex-col md:flex-row gap-5 justify-between items-start md:items-center shadow-sm">
+        <div className="space-y-1 text-left">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0 inline-block animate-pulse" />
-            <span className="text-xs uppercase font-mono tracking-wider font-extrabold text-rose-600 block">
-              Sanjivani Advanced Cardiac locator
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 inline-block animate-pulse" />
+            <span className="text-xs uppercase font-mono tracking-wider font-extrabold text-emerald-600 block">
+              OpenStreetMap + Local GPS Feed
             </span>
           </div>
-          <h3 className="text-xl font-extrabold text-slate-900 tracking-tight">Interactive Cardiac Care Locator</h3>
-          <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
-            Enter any city and optional state below to instantly map nearby open healthcare clinics, emergency cardiac centers, and critical hospitality wards within your chosen radial limit.
+          <h3 className="text-sm font-extrabold text-slate-900 tracking-tight">{t.locator.title}</h3>
+          <p className="text-sm text-slate-600 max-w-xl">
+            {t.locator.subtitle}
           </p>
         </div>
 
-        <form onSubmit={handleSearchCityState} className="grid grid-cols-1 sm:grid-cols-12 gap-4 pt-1">
-          <div className="sm:col-span-4 relative">
+        {/* Scan & Locate Area trigger button directly targeting browser request */}
+        <button 
+          onClick={() => setShowPermissionModal(true)}
+          disabled={isLoading}
+          className={`${isLoading ? 'bg-slate-500 cursor-not-allowed opacity-90' : 'bg-slate-900 hover:bg-slate-800 cursor-pointer'} text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-md`}
+        >
+          {isLoading ? (
+            <Loader2 className="w-4 h-4 text-white animate-spin" />
+          ) : (
+            <Compass className="w-4 h-4 text-emerald-400 animate-pulse" />
+          )}
+          <span>{isLoading ? 'Scanning GPS...' : t.locator.scanBtn}</span>
+        </button>
+      </div>
+
+      {/* Search by City & State Panel */}
+      <div className="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm text-left space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+          <div>
+            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-widest font-mono">
+              Explore Cardiac Facilities by Location
+            </h4>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Type any Indian city and state to load local emergency centers
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSearchCityState} className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
+          <div className="sm:col-span-5 relative">
             <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
               City Name *
             </label>
@@ -983,13 +1087,13 @@ out center;`;
                 value={searchCity}
                 onChange={(e) => setSearchCity(e.target.value)}
                 placeholder="e.g. Pune, Bangalore, Kolkata"
-                className="w-full h-10 bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl pl-9 pr-4 py-2.5 outline-none transition-all"
+                className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl pl-9 pr-4 py-2.5 outline-none transition-all"
                 required
               />
             </div>
           </div>
 
-          <div className="sm:col-span-3">
+          <div className="sm:col-span-4">
             <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
               State (Optional)
             </label>
@@ -998,27 +1102,11 @@ out center;`;
               value={searchState}
               onChange={(e) => setSearchState(e.target.value)}
               placeholder="e.g. Maharashtra, Karnataka"
-              className="w-full h-10 bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl px-4 py-2.5 outline-none transition-all"
+              className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl px-4 py-2.5 outline-none transition-all"
             />
           </div>
 
-          <div className="sm:col-span-3">
-            <label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
-              Search Radius Limit
-            </label>
-            <select
-              value={searchRadius}
-              onChange={(e) => setSearchRadius(Number(e.target.value))}
-              className="w-full h-10 bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-bold rounded-xl px-4 py-2 outline-none transition-all cursor-pointer"
-            >
-              <option value="5">5 km Radius</option>
-              <option value="10">10 km Radius</option>
-              <option value="20">20 km Radius</option>
-              <option value="50">50 km Radius (Default)</option>
-            </select>
-          </div>
-
-          <div className="sm:col-span-2 flex items-end">
+          <div className="sm:col-span-3 flex items-end">
             <button
               type="submit"
               disabled={isLoading}
@@ -1026,13 +1114,13 @@ out center;`;
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-white" />
-                  <span>Scanning...</span>
+                  <Loader2 className="w-4 h-4 animate-spin text-white animate-duration-1000" />
+                  <span>Searching...</span>
                 </>
               ) : (
                 <>
                   <Search className="w-4 h-4 text-slate-300" />
-                  <span>Search</span>
+                  <span>Search Near</span>
                 </>
               )}
             </button>
@@ -1052,13 +1140,24 @@ out center;`;
 
             {/* Error notifications */}
             {errorText && (
-              <div id="search-error-alert-banner" className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-left text-xs text-amber-900 leading-relaxed shadow-sm">
+              <div id="gps-error-alert-banner" className="p-4 bg-amber-50 border border-amber-200 rounded-2xl text-left text-xs text-amber-900 leading-relaxed space-y-2.5 shadow-sm">
                 <div className="flex items-start gap-2.5">
                   <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-                  <div className="space-y-1">
-                    <span className="font-extrabold text-slate-900 block">Search Notice</span>
-                    <p className="text-slate-700 font-sans font-medium leading-normal">{errorText}</p>
+                  <div className="space-y-0.5">
+                    <span className="font-extrabold text-slate-900 block">GPS Connection/Permission Warning</span>
+                    <p className="text-slate-700 font-sans font-medium">{errorText}</p>
                   </div>
+                </div>
+                <div className="bg-white/90 border border-amber-100 p-2.5 rounded-xl text-[11px] text-slate-700 font-sans space-y-1.5 font-medium shadow-inner">
+                  <span className="font-bold text-slate-800 block">Immediate steps to trace your location:</span>
+                  <ul className="list-decimal pl-4 space-y-1 text-[11.5px] text-slate-600">
+                    <li>Verify your phone/computer's <strong>GPS / Location Services</strong> is toggled <strong>ON</strong>.</li>
+                    <li>Look next to the URL bar above—click the site settings / lock icon and set <strong>Location access to "Allow"</strong>.</li>
+                    <li>Once GPS is active, click the <strong>"Scan nearby care"</strong> button above again.</li>
+                  </ul>
+                  <p className="text-[10px] text-slate-500 pt-0.5 font-semibold">
+                    * Sajivani strictly uses your location on-device to seek nearby emergency clinics, protecting your privacy.
+                  </p>
                 </div>
               </div>
             )}
@@ -1194,7 +1293,7 @@ out center;`;
           {/* Telemetry log tag overlay */}
           <div className="absolute top-4 left-4 z-[10] bg-slate-950/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-xl border border-slate-800 text-[10px] font-mono flex items-center gap-2 shadow-lg text-left">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
-            <span>Sanjivani Live GIS Platform</span>
+            <span>Sajivani Live GIS Platform</span>
           </div>
 
           {/* Map Layer Switcher Overlay (Streets / Satellite) */}
@@ -1221,7 +1320,7 @@ out center;`;
               <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-slate-900 text-slate-400 p-6">
                 <Loader2 className="w-7 h-7 text-rose-500 animate-spin" />
                 <span className="font-mono text-xs text-slate-300 font-semibold uppercase tracking-wider">
-                  Configuring Sanjivani Live Tracker...
+                  Configuring Sajivani Live Tracker...
                 </span>
                 <p className="text-[11px] text-slate-500 font-sans max-w-xs text-center">
                   Syncing local hospital databases and loading live GPS mapping layers.
@@ -1289,6 +1388,93 @@ out center;`;
         </div>
 
       </div>
+
+      {/* Turn on GPS Location Reminder Modal */}
+      {showPermissionModal && (
+        <div className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center z-[9999] p-4 animate-in fade-in duration-200">
+          <div className="bg-white rounded-3xl max-w-md w-full border border-slate-200 p-6 md:p-8 space-y-6 shadow-2xl relative text-left">
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowPermissionModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 p-1 bg-slate-50 hover:bg-slate-100 rounded-full transition-colors cursor-pointer"
+            >
+              <X className="w-4 h-4" />
+            </button>
+
+            {/* Header Icon & Title */}
+            <div className="text-center space-y-3">
+              <div className="w-14 h-14 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-500 animate-pulse">
+                <Compass className="w-7 h-7 text-rose-500" />
+              </div>
+              <div className="space-y-1">
+                <h3 className="text-lg font-black text-slate-900 tracking-tight">
+                  Turn On Your Device's GPS Location
+                </h3>
+                <p className="text-xs text-slate-500 font-mono font-bold uppercase tracking-wider text-rose-600">
+                  Required for Precise Nearby Care
+                </p>
+              </div>
+            </div>
+
+            {/* Instructional Content */}
+            <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl text-[11px] text-slate-705 space-y-4 font-sans leading-relaxed">
+              <p className="font-extrabold text-slate-900 leading-normal">
+                To show premium cardiac care and clinics around you, Sajivani maps your location using active physical GPS satellite coordinates correctly:
+              </p>
+              
+              <ul className="space-y-3">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                    1
+                  </span>
+                  <div>
+                    <span className="font-extrabold text-slate-950 block">Scan Device GPS Panel</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">Please pull down your screen quick settings (mobile) or click your clock bar settings (desktop) and switch location status to **ON**.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                    2
+                  </span>
+                  <div>
+                    <span className="font-extrabold text-slate-950 block">Approve Browser Geolocation Prompt</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">Click "Allow/Permit" once the system requests coordinate telemetry.</span>
+                  </div>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                    3
+                  </span>
+                  <div>
+                    <span className="font-extrabold text-slate-950 block">If Using Sandbox Preview</span>
+                    <span className="text-slate-500 text-[11px] leading-tight block">If location is blocked in this side iframe, please click the <strong>"Open in New Tab"</strong> arrow button above to authorize GPS cleanly.</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Actions */}
+            <div className="flex flex-col gap-2 pt-2">
+              <button
+                onClick={() => {
+                  setShowPermissionModal(false);
+                  triggerGpsScan();
+                }}
+                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3 rounded-xl shadow-md transition-all uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Compass className="w-4 h-4 text-emerald-400" />
+                <span>GPS is active &bull; start scan</span>
+              </button>
+              <button
+                onClick={() => setShowPermissionModal(false)}
+                className="w-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs py-2.5 rounded-xl transition-all uppercase tracking-wider text-center cursor-pointer"
+              >
+                No, cancel scan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
