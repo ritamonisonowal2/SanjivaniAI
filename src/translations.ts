@@ -164,7 +164,7 @@ export interface TranslationScheme {
 
 export const TRANSLATIONS: TranslationScheme = {
   general: {
-    workstationTitle: "Sajivani AI Clinical Workstation",
+    workstationTitle: "Sanjivani AI Clinical Workstation",
     taglineSubtitle: "Cardiovascular Emergency Navigator & Care Search",
     bannerWarning: "Emergency Protocol: Chest squeezing, radiating throat/jaw discomfort, or sudden loss of consciousness requires an immediate call to medical emergency service.",
     tickerTitle: "Clinical Fact Check",
@@ -179,7 +179,7 @@ export const TRANSLATIONS: TranslationScheme = {
     cprTab: "3. CPR & AED Guide",
     doctorTab: "4. Ask Your Doctor",
     footerDisclaimer: "Medical guidelines curated from peer-reviewed cardiac research publications (AHA/ACC Directives). Always consult a certified medical practitioner for professional diagnosis.",
-    footerCredits: "Sajivani AI",
+    footerCredits: "Sanjivani AI",
     stickyAha: "Educational Framework Sync Active",
     stickyNeedDispatch: "Need critical dispatch?",
     stickyCallBtn: "Call Emergency hotline (112)",
