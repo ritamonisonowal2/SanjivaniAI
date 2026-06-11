@@ -1,6 +1,6 @@
-# Sajivani AI 🩺❤️
+# Sanjivani AI 🩺❤️
 
-**Sajivani AI** is an advanced, high-fidelity cardiovascular educational companion, emergency locator, and first-responder triage assistant. Engineered with Vite, React, and Tailwind CSS, it delivers real-time emergency preparedness tools, dynamic CPR pacing guides, geographical cardiac care mappings, and portable diagnostic profile cards.
+**Sanjivani AI** is an advanced, high-fidelity cardiovascular educational companion, emergency locator, and first-responder triage assistant. Engineered with Vite, React, and Tailwind CSS, it delivers real-time emergency preparedness tools, dynamic CPR pacing guides, geographical cardiac care mappings, and portable diagnostic profile cards.
 
 ---
 
@@ -49,7 +49,7 @@
 1. **Clone the repository**:
    ```bash
    git clone https://github.com/ritamonisonowal2/SanjivaniAI.git
-   cd sajivaniai
+   cd sanjivaniai
    ```
 
 2. **Install all dependencies**:
