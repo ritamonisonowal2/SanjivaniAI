@@ -1,6 +1,6 @@
 {
-  "name": "Sajivani AI",
-  "description": "Sajivani AI: An advanced cardiovascular educational companion and emergency locator. Explore interactive cardiac mechanics, learn with professional health guides, test knowledge, and locate nearby emergency care facilities.",
+  "name": "Sanjivani AI",
+  "description": "Sanjivani AI: An advanced cardiovascular educational companion and emergency locator. Explore interactive cardiac mechanics, learn with professional health guides, test knowledge, and locate nearby emergency care facilities.",
   "requestFramePermissions": ["geolocation"],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
