@@ -590,7 +590,7 @@ SAJIVANI BYSTANDER CARD`;
 
             {/* Authenticity seal */}
             <div className="pt-4 border-t border-slate-900 flex justify-between items-center text-xs font-mono text-slate-500 self-stretch">
-              <span>Sajivani emergency response standard</span>
+              <span>Sanjivani emergency response standard</span>
               <div className="flex items-center gap-1.5 text-indigo-400 shrink-0">
                 <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
                 <span className="font-extrabold uppercase tracking-wide">Secure Record</span>
