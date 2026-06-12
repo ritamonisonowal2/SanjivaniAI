@@ -7,7 +7,7 @@
 
 /* Base style overrides to declare fully fluid, responsive typography that scales seamlessly across all devices */
 html {
-  font-size: clamp(13px, 0.5vw + 12px, 17px); /* Seamless interpolation from compact screens (320px) to ultra-wide (1280px+) */
+  font-size: clamp(12.5px, 0.6vw + 11.5px, 16.5px); /* Seamless interpolation from compact screens (320px) to ultra-wide (1280px+) */
   line-height: 1.55;
   font-family: var(--font-sans);
 }
@@ -132,3 +132,21 @@ li {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Global design override: Disable all box shadows for a modern flat border-based aesthetic */
+*, *::before, *::after {
+  box-shadow: none !important;
+}
+
+/* Global focus state override: Replace harsh default browser black boxes/outlines with soft themed styles */
+button:focus, a:focus, input:focus, select:focus, textarea:focus {
+  outline: 2px solid rgba(225, 29, 72, 0.25) !important;
+  outline-offset: 2px !important;
+}
+
+/* Avoid showing outline boxes when clicking with mouse or touch */
+button:focus:not(:focus-visible), a:focus:not(:focus-visible), input:focus:not(:focus-visible), select:focus:not(:focus-visible), textarea:focus:not(:focus-visible) {
+  outline: none !important;
+}
+
+

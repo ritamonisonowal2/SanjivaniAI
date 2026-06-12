@@ -145,21 +145,21 @@ SAJIVANI BYSTANDER CARD`;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      // Draw background - deep solid medical slate-900 tone
-      ctx.fillStyle = '#1e293b'; // slate-800 primary
+      // Draw background - clean slate-50 light tone
+      ctx.fillStyle = '#f8fafc';
       ctx.fillRect(0, 0, 800, 560);
       
       // Secondary background texture for content area
-      ctx.fillStyle = '#0f172a'; // slate-900 inner card
+      ctx.fillStyle = '#ffffff';
       ctx.fillRect(20, 20, 760, 520);
 
-      // Draw thick red high-contrast warning border around inner card
-      ctx.strokeStyle = '#ef4444'; // Red-500
-      ctx.lineWidth = 6;
+      // Draw red border around inner card
+      ctx.strokeStyle = '#f43f5e';
+      ctx.lineWidth = 4;
       ctx.strokeRect(20, 20, 760, 520);
 
       // RED header alert bar inside content panel
-      ctx.fillStyle = '#ef4444'; // Red-500
+      ctx.fillStyle = '#f43f5e';
       ctx.fillRect(20, 20, 760, 68);
 
       // Header Text - large, crisp and readable
@@ -173,13 +173,13 @@ SAJIVANI BYSTANDER CARD`;
 
       const drawDetail = (label: string, value: string, highlightColor?: string) => {
         // Label header
-        ctx.fillStyle = '#94a3b8'; // slate-400 label
+        ctx.fillStyle = '#64748b'; // slate-500 label
         ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         ctx.fillText(label.toUpperCase() + ':', x, y);
         y += 20;
 
-        // Value text - scaled up for excellent legibility
-        ctx.fillStyle = highlightColor || '#f1f5f9'; // slate-100 or highlighted
+        // Value text
+        ctx.fillStyle = highlightColor || '#0f172a'; // slate-900 or highlighted
         ctx.font = 'bold 15px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
         
         // Wrap text if too long
@@ -203,10 +203,10 @@ SAJIVANI BYSTANDER CARD`;
       };
 
       drawDetail('Patient Identity', fullName || 'Patient Name');
-      drawDetail('Blood Classification', bloodGroup || 'Unknown', '#f43f5e'); // Rose-500
-      drawDetail('Critical Medical Allergies', allergies || 'None Declared', '#f59e0b'); // Amber-500
-      drawDetail('Cardiac Conditions & Active Regimen', `${conditions || 'None Registered'} • Medications: ${medications || 'None Declared'}`, '#38bdf8'); // Sky-400
-      drawDetail('Immediate Dispatch Contact (Next-of-Kin)', `${emergencyContactName || 'Emergency Contact Name'} • ${emergencyContactPhone || 'Emergency Phone Number'}`, '#10b981'); // Emerald-500
+      drawDetail('Blood Classification', bloodGroup || 'Unknown', '#e11d48'); // Rose-600
+      drawDetail('Critical Medical Allergies', allergies || 'None Declared', '#d97706'); // Amber-600
+      drawDetail('Cardiac Conditions & Active Regimen', `${conditions || 'None Registered'} • Medications: ${medications || 'None Declared'}`, '#0284c7'); // Sky-600
+      drawDetail('Immediate Dispatch Contact (Next-of-Kin)', `${emergencyContactName || 'Emergency Contact Name'} • ${emergencyContactPhone || 'Emergency Phone Number'}`, '#059669'); // Emerald-600
 
       // Draw high-density QR box on the right
       ctx.fillStyle = '#ffffff';
@@ -216,16 +216,16 @@ SAJIVANI BYSTANDER CARD`;
       ctx.drawImage(qrCanvas, 505, 135, 240, 240);
 
       // Draw QR Scan instruction tag
-      ctx.fillStyle = '#ef4444';
+      ctx.fillStyle = '#f43f5e';
       ctx.fillRect(495, 385, 260, 38);
       ctx.fillStyle = '#ffffff';
       ctx.font = 'bold 12px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
       ctx.textAlign = 'center';
       ctx.fillText('SCAN QR CODE TO RETRIEVE ID', 625, 409);
-      ctx.textAlign = 'left'; // Reset alignment for other components
+      ctx.textAlign = 'left'; // Reset alignment
 
       // Footer notice
-      ctx.fillStyle = '#64748b'; // slate-500
+      ctx.fillStyle = '#94a3b8'; // slate-400
       ctx.font = 'bold 11px "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace';
       ctx.fillText('CRYPTOGRAPHIC LOCAL SANDBOX PROTECTION • SAJIVANI OFFLINE EMERGENCY STANDARD', 40, 520);
 
@@ -243,38 +243,30 @@ SAJIVANI BYSTANDER CARD`;
 
   return (
     <div className="space-y-6" id="section-4-medical-id-qr-dashboard">
-      
-      {/* Dynamic Diagnostic Section Title bar */}
-      <div className="bg-slate-900 border border-slate-800 p-6 rounded-3xl flex flex-col md:flex-row gap-5 justify-between items-start md:items-center shadow-lg relative overflow-hidden text-left">
-        <div className="absolute top-0 right-0 p-8 opacity-[0.03] pointer-events-none">
-          <QrCode className="w-48 h-48 text-indigo-400" />
-        </div>
-        
-        <div className="space-y-2 text-left font-sans relative z-10">
+        {/* Header section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
+        <div className="space-y-0.5">
           <div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-indigo-500 shrink-0 inline-block animate-pulse" />
-            <span className="text-sm uppercase font-mono tracking-widest font-extrabold text-indigo-400 block">
-              Section 4: Rescuer Quick Scanning Portal
-            </span>
+            <QrCode className="w-5 h-5 text-rose-500 shrink-0" />
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-955 tracking-tight">Emergency Medical ID & Scannable QR</h3>
           </div>
-          <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight">Emergency Medical ID & Scannable QR</h3>
-          <p className="text-sm text-slate-300 max-w-2xl leading-relaxed">
-            Fill out your critical cardiovascular history, active prescriptions, and emergency dispatch links. Real-time updates generate an offline QR passport so medical professionals or first-responders can immediately scan and view your records during crisis response.
+          <p className="text-xs text-slate-500 max-w-2xl leading-relaxed">
+            Fill out your critical cardiovascular history, active prescriptions, and emergency dispatch links to generate an offline QR passport.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5 relative z-10 shrink-0 self-start md:self-auto">
+        <div className="flex flex-wrap items-center gap-2 shrink-0 self-start sm:self-auto">
           <button 
             type="button"
             onClick={handleResetToDefaults}
-            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-xs font-mono font-black uppercase tracking-wider text-slate-200 hover:text-white rounded-xl transition-all cursor-pointer"
+            className="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-xs font-mono font-bold uppercase tracking-wider text-slate-700 rounded-xl transition-all cursor-pointer"
           >
             Reset to Sample
           </button>
           <button 
             type="button"
             onClick={handleClearAll}
-            className="p-2.5 bg-red-950/40 hover:bg-red-900/60 hover:text-white border border-red-900 text-red-400 rounded-xl transition-all cursor-pointer"
+            className="p-2 bg-rose-50 hover:bg-rose-100 hover:text-rose-700 border border-rose-200 text-rose-600 rounded-xl transition-all cursor-pointer"
             title="Clear All Fields"
           >
             <Trash2 className="w-4 h-4" />
@@ -286,17 +278,17 @@ SAJIVANI BYSTANDER CARD`;
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         
         {/* Left Side Column: Medical Passcard Form Fields Editor */}
-        <div className="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-3xl p-6 text-left space-y-6 shadow-xl">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+        <div className="lg:col-span-7 bg-white border border-slate-200 rounded-3xl p-6 text-left space-y-6 shadow-sm">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-150">
             <div className="flex items-center gap-2.5">
-              <User className="w-5 h-5 text-indigo-400" />
-              <span className="text-base font-bold uppercase tracking-wider text-slate-100 font-sans">
+              <User className="w-5 h-5 text-rose-500" />
+              <span className="text-base font-bold uppercase tracking-wider text-slate-900 font-sans">
                 Cardiovascular Health Registry
               </span>
             </div>
             
-            <div className="flex items-center gap-2 text-xs font-mono text-emerald-400 font-bold bg-emerald-950/30 px-3 py-1.5 border border-emerald-900/60 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center gap-2 text-xs font-mono text-emerald-700 font-bold bg-emerald-50 px-3 py-1.5 border border-emerald-200 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               <span>Editable (Auto-Saving Mode)</span>
             </div>
           </div>
@@ -305,7 +297,7 @@ SAJIVANI BYSTANDER CARD`;
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             {/* Full Name */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Full Patient Name
               </label>
               <input
@@ -313,19 +305,19 @@ SAJIVANI BYSTANDER CARD`;
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all"
               />
             </div>
 
             {/* Blood group selection dropdown */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Clinical Blood Group
               </label>
               <select
                 value={bloodGroup}
                 onChange={(e) => setBloodGroup(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition-all cursor-pointer"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 focus:border-slate-400 focus:bg-white outline-none transition-all cursor-pointer"
               >
                 <option value="Unknown">Select Blood Group</option>
                 <option value="A+">A+ (A Positive)</option>
@@ -341,7 +333,7 @@ SAJIVANI BYSTANDER CARD`;
 
             {/* Chronic Medical Conditions */}
             <div className="sm:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Cardiopathological Records & Chronic Conditions
               </label>
               <textarea
@@ -349,13 +341,13 @@ SAJIVANI BYSTANDER CARD`;
                 onChange={(e) => setConditions(e.target.value)}
                 rows={2}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all resize-none"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all resize-none"
               />
             </div>
 
             {/* Critical Allergies */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Immediate Action Allergies (Prescriptions, Dust)
               </label>
               <input
@@ -363,19 +355,19 @@ SAJIVANI BYSTANDER CARD`;
                 value={allergies}
                 onChange={(e) => setAllergies(e.target.value)}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all"
               />
             </div>
 
             {/* Organ Donor */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Organ Donor Accordance
               </label>
               <select
                 value={organDonor}
                 onChange={(e) => setOrganDonor(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 focus:border-indigo-500 outline-none transition-all cursor-pointer"
+                className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 focus:border-slate-400 focus:bg-white outline-none transition-all cursor-pointer"
               >
                 <option value="No">No / Unregistered</option>
                 <option value="Yes">Yes (Registered Organ Donor)</option>
@@ -384,7 +376,7 @@ SAJIVANI BYSTANDER CARD`;
 
             {/* Current Daily Medications */}
             <div className="sm:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Active Routine Cardiovascular Medications
               </label>
               <input
@@ -392,13 +384,13 @@ SAJIVANI BYSTANDER CARD`;
                 value={medications}
                 onChange={(e) => setMedications(e.target.value)}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all"
               />
             </div>
 
             {/* Emergency Contact Name */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Emergency Contact Name
               </label>
               <input
@@ -406,13 +398,13 @@ SAJIVANI BYSTANDER CARD`;
                 value={emergencyContactName}
                 onChange={(e) => setEmergencyContactName(e.target.value)}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all"
               />
             </div>
 
             {/* Emergency Contact Phone */}
             <div className="sm:col-span-1">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 Emergency Phone Number (Kin)
               </label>
               <input
@@ -420,13 +412,13 @@ SAJIVANI BYSTANDER CARD`;
                 value={emergencyContactPhone}
                 onChange={(e) => setEmergencyContactPhone(e.target.value)}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all"
               />
             </div>
 
             {/* Extra Rescue Instructions */}
             <div className="sm:col-span-2">
-              <label className="text-xs font-bold uppercase tracking-wider text-slate-300 block mb-2">
+              <label className="text-xs font-bold uppercase tracking-wider text-slate-700 block mb-2">
                 First-Responder & Transport Directives
               </label>
               <textarea
@@ -434,15 +426,15 @@ SAJIVANI BYSTANDER CARD`;
                 onChange={(e) => setExtraInstructions(e.target.value)}
                 rows={2}
                 placeholder="type here"
-                className="w-full bg-slate-950 text-slate-100 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-700 focus:border-indigo-500 focus:bg-slate-950/80 shadow-md transition-all resize-none"
+                className="w-full bg-slate-50 text-slate-800 text-sm font-semibold rounded-xl px-4 py-3 outline-none border border-slate-200 focus:border-slate-400 focus:bg-white shadow-sm transition-all resize-none"
               />
             </div>
           </div>
 
           {/* Local storage sync prompt */}
-          <div className="pt-4 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5 text-sm text-emerald-400">
-              <ShieldCheck className="w-5 h-5 text-emerald-500 shrink-0" />
+          <div className="pt-4 border-t border-slate-150 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5 text-sm text-emerald-700">
+              <ShieldCheck className="w-5 h-5 text-emerald-600 shrink-0" />
               <span>All changes are automatically saved to your local browser sandbox</span>
             </div>
           </div>
@@ -452,20 +444,19 @@ SAJIVANI BYSTANDER CARD`;
         <div className="lg:col-span-5 space-y-6">
           
           {/* Simulated First-Responder Lockscreen Passcard - completely responsive, no forced wrapping layout */}
-          <div className="bg-slate-950 border-2 border-red-500 rounded-3xl p-6 shadow-2xl relative overflow-hidden flex flex-col justify-between text-left space-y-6">
+          <div className="bg-white border-2 border-rose-500 rounded-3xl p-6 shadow-sm relative overflow-hidden flex flex-col justify-between text-left space-y-6">
             
             {/* Tagline clinical banner */}
-            <div className="flex items-center justify-between pb-4 border-b border-rose-900/60">
+            <div className="flex items-center justify-between pb-4 border-b border-rose-100">
               <div className="flex items-center gap-2">
                 <div className="relative">
-                  <Heart className="w-5 h-5 text-red-500 fill-red-500 animate-pulse shrink-0" />
-                  <span className="absolute -inset-1 bg-red-500/20 rounded-full blur-sm" />
+                  <Heart className="w-5 h-5 text-rose-500 fill-rose-500 shrink-0" />
                 </div>
-                <span className="font-extrabold text-sm tracking-wider text-red-500 uppercase font-mono">
+                <span className="font-extrabold text-sm tracking-wider text-rose-600 uppercase font-mono">
                   Emergency Medical Pass
                 </span>
               </div>
-              <span className="text-xs font-mono font-black text-red-400 bg-red-950/50 px-3 py-1 border border-red-900/60 rounded-full shrink-0">
+              <span className="text-xs font-mono font-bold text-rose-700 bg-rose-50 px-3 py-1 border border-rose-200 rounded-full shrink-0">
                 RED-ALERT
               </span>
             </div>
@@ -473,7 +464,7 @@ SAJIVANI BYSTANDER CARD`;
             {/* Centered QR code surround for pristine scanning contrast */}
             <div className="flex flex-col items-center justify-center space-y-4 py-1">
 
-              <div className="relative p-4 bg-white rounded-2xl flex items-center justify-center shadow-lg hover:scale-105 transition-all duration-300">
+              <div className="relative p-4 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center shadow-inner hover:scale-[1.01] transition-all duration-300">
                 <QRCodeSVG
                   id="bystander-medical-svg-qr"
                   value={qrValue}
@@ -502,47 +493,46 @@ SAJIVANI BYSTANDER CARD`;
                 </div>
               </div>
 
-              <span className="text-xs font-mono uppercase font-black text-slate-400 tracking-wider text-center">
+              <span className="text-xs font-mono uppercase font-bold text-slate-500 tracking-wider text-center">
                 SCAN TO RETRIEVE EMERGENCY MEDICAL RECORDS
               </span>
             </div>
 
             {/* Patient Core Details with completely legible text sizing */}
-            <div className="space-y-5 border-t border-slate-900 pt-5 self-stretch">
+            <div className="space-y-5 border-t border-slate-200 pt-5 self-stretch">
               
               {/* Patient Name */}
               <div className="space-y-1">
-                <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-400 uppercase font-bold">
-                  <User className="w-4 h-4 text-slate-500 shrink-0" />
+                <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-500 uppercase font-bold">
+                  <User className="w-4 h-4 text-slate-400 shrink-0" />
                   <span>Patient Identity</span>
                 </div>
-                <p className="text-xl sm:text-2xl font-black text-white leading-tight">
+                <p className="text-xl sm:text-2xl font-black text-slate-900 leading-tight">
                   {fullName || 'Patient Name'}
                 </p>
               </div>
 
               {/* Physiology Stats pills with superb sizing */}
               <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-1 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
-                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-400 uppercase font-bold">
+                <div className="space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-500 uppercase font-bold">
                     <Droplet className="w-4 h-4 text-rose-500 shrink-0" />
                     <span>Blood Type</span>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-sm sm:text-base font-mono font-black text-red-400 mt-1">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+                  <span className="inline-flex items-center gap-1.5 text-sm sm:text-base font-mono font-black text-rose-600 mt-1">
                     {bloodGroup}
                   </span>
                 </div>
 
-                <div className="space-y-1 bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
-                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-400 uppercase font-bold">
+                <div className="space-y-1 bg-slate-50 p-3 rounded-2xl border border-slate-200">
+                  <div className="flex items-center gap-1.5 text-xs font-mono tracking-widest text-slate-500 uppercase font-bold">
                     <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0" />
                     <span>Organ Donor</span>
                   </div>
                   <span className={`inline-flex items-center gap-1.5 text-sm sm:text-base font-mono font-black mt-1 ${
                     organDonor === 'Yes' 
-                      ? 'text-emerald-400' 
-                      : 'text-slate-400'
+                      ? 'text-emerald-600' 
+                      : 'text-slate-500'
                   }`}>
                     {organDonor === 'Yes' ? 'Donor (Yes)' : 'No'}
                   </span>
@@ -550,16 +540,16 @@ SAJIVANI BYSTANDER CARD`;
               </div>
 
               {/* Emergency Contact detail box with ample spacing to completely prevent overlapping */}
-              <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 space-y-3 self-stretch">
-                <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-slate-400 uppercase font-bold pb-1.5 border-b border-slate-800">
-                  <Phone className="w-4 h-4 text-emerald-500 shrink-0" />
+              <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3 self-stretch">
+                <div className="flex items-center gap-2 text-xs font-mono tracking-widest text-slate-500 uppercase font-bold pb-1.5 border-b border-slate-200">
+                  <Phone className="w-4 h-4 text-emerald-600 shrink-0" />
                   <span>Immediate Contact (Next-of-Kin)</span>
                 </div>
                 <div className="space-y-1 text-left">
-                  <p className="text-base font-black text-white leading-snug">
+                  <p className="text-base font-black text-slate-900 leading-snug">
                     {emergencyContactName || 'Emergency Contact Name'}
                   </p>
-                  <p className="text-sm font-mono font-extrabold text-emerald-400 block tracking-wider mt-0.5">
+                  <p className="text-sm font-mono font-extrabold text-emerald-600 block tracking-wider mt-0.5">
                     {emergencyContactPhone || 'Emergency Phone Number'}
                   </p>
                 </div>
@@ -567,33 +557,33 @@ SAJIVANI BYSTANDER CARD`;
             </div>
 
             {/* Emergency Alerts & Contraindications Panel details block */}
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 text-left self-stretch">
-              <div className="flex items-center gap-2.5 text-sm font-mono text-red-500 font-extrabold tracking-wide border-b border-slate-800 pb-2.5">
-                <AlertOctagon className="w-4.5 h-4.5 text-red-500 animate-bounce" />
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-4 text-left self-stretch">
+              <div className="flex items-center gap-2.5 text-sm font-mono text-rose-600 font-bold tracking-wide border-b border-slate-200 pb-2.5">
+                <AlertOctagon className="w-4.5 h-4.5 text-rose-500" />
                 <span>ACTIVE CLINICAL CONTRAINDICATIONS</span>
               </div>
-              <div className="text-sm space-y-3.5 text-slate-300 font-sans leading-relaxed">
+              <div className="text-sm space-y-3.5 text-slate-700 font-sans leading-relaxed">
                 <div>
-                  <span className="text-slate-300 font-bold uppercase text-xs tracking-wider block mb-1">Diagnosed Cardiac Conditions:</span>
-                  <p className="text-slate-100 font-semibold leading-relaxed">{conditions || 'No recorded cardiac history'}</p>
+                  <span className="text-slate-500 font-bold uppercase text-xs tracking-wider block mb-1">Diagnosed Cardiac Conditions:</span>
+                  <p className="text-slate-800 font-semibold leading-relaxed">{conditions || 'No recorded cardiac history'}</p>
                 </div>
                 <div>
-                  <span className="text-slate-300 font-bold uppercase text-xs tracking-wider block mb-1">Critical Active Allergies:</span>
-                  <p className="text-amber-400 font-bold leading-relaxed">{allergies || 'No allergies declared'}</p>
+                  <span className="text-slate-500 font-bold uppercase text-xs tracking-wider block mb-1">Critical Active Allergies:</span>
+                  <p className="text-amber-700 font-bold leading-relaxed">{allergies || 'No allergies declared'}</p>
                 </div>
                 <div>
-                  <span className="text-slate-300 font-bold uppercase text-xs tracking-wider block mb-1">Routine Prescriptions:</span>
-                  <p className="text-sky-400 font-semibold leading-relaxed">{medications || 'No medications listed'}</p>
+                  <span className="text-slate-500 font-bold uppercase text-xs tracking-wider block mb-1">Routine Prescriptions:</span>
+                  <p className="text-sky-700 font-semibold leading-relaxed">{medications || 'No medications listed'}</p>
                 </div>
               </div>
             </div>
 
             {/* Authenticity seal */}
-            <div className="pt-4 border-t border-slate-900 flex justify-between items-center text-xs font-mono text-slate-500 self-stretch">
+            <div className="pt-4 border-t border-slate-200 flex justify-between items-center text-xs font-mono text-slate-400 self-stretch">
               <span>Sanjivani emergency response standard</span>
-              <div className="flex items-center gap-1.5 text-indigo-400 shrink-0">
+              <div className="flex items-center gap-1.5 text-rose-600 shrink-0">
                 <ShieldCheck className="w-4.5 h-4.5 shrink-0" />
-                <span className="font-extrabold uppercase tracking-wide">Secure Record</span>
+                <span className="font-bold uppercase tracking-wide">Secure Record</span>
               </div>
             </div>
           </div>
@@ -606,16 +596,16 @@ SAJIVANI BYSTANDER CARD`;
               <button
                 type="button"
                 onClick={copyToClipboard}
-                className="flex-1 py-4 px-5 bg-slate-900 hover:bg-slate-800 border-2 border-slate-700 text-slate-200 hover:text-white rounded-2xl text-sm font-sans font-extrabold uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-lg hover:shadow-xl"
+                className="flex-1 py-4 px-5 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-2xl text-sm font-sans font-bold uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all cursor-pointer"
               >
                 {copied ? (
                   <>
-                    <Check className="w-5 h-5 text-emerald-500 shrink-0" />
+                    <Check className="w-5 h-5 text-emerald-600 shrink-0" />
                     <span>Copy successful</span>
                   </>
                 ) : (
                   <>
-                    <Copy className="w-5 h-5 text-slate-400 shrink-0" />
+                    <Copy className="w-5 h-5 text-rose-500 shrink-0" />
                     <span>Copy Card Text</span>
                   </>
                 )}
@@ -625,10 +615,10 @@ SAJIVANI BYSTANDER CARD`;
               <button
                 type="button"
                 onClick={handleDownloadQR}
-                className="flex-1 py-4 px-5 bg-slate-800 hover:bg-slate-700 border-2 border-slate-600 text-white hover:text-slate-100 rounded-2xl text-sm font-sans font-extrabold uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-lg hover:shadow-xl"
+                className="flex-1 py-4 px-5 bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-800 rounded-2xl text-sm font-sans font-bold uppercase tracking-wider flex items-center justify-center gap-2.5 transition-all cursor-pointer shadow-sm"
                 title="Download high-resolution QR image"
               >
-                <Download className="w-5 h-5 text-slate-300 shrink-0" />
+                <Download className="w-5 h-5 text-slate-600 shrink-0" />
                 <span>Download Pure QR</span>
               </button>
             </div>
@@ -637,21 +627,21 @@ SAJIVANI BYSTANDER CARD`;
             <button
               type="button"
               onClick={handleDownloadCardImage}
-              className="w-full py-4.5 px-6 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-sm font-sans font-extrabold uppercase tracking-wider flex items-center justify-center gap-3 transition-all cursor-pointer shadow-xl shadow-indigo-950/50 border border-indigo-500 scale-100 hover:scale-[1.01]"
+              className="w-full py-4.5 px-6 bg-rose-600 hover:bg-rose-700 text-white rounded-2xl text-sm font-sans font-bold uppercase tracking-wider flex items-center justify-center gap-3 transition-all cursor-pointer shadow-md border border-rose-500"
               title="Download beautiful complete medical passcard containing text and QR code"
             >
-              <QrCode className="w-5 h-5 text-indigo-200 animate-pulse shrink-0" />
+              <QrCode className="w-5 h-5 text-rose-200 shrink-0" />
               <span>Download Integrated Medical Passcard</span>
             </button>
           </div>
 
           {/* Real-time sync feedback message banner */}
           {saveSuccess && (
-            <div className="bg-emerald-950/60 border border-emerald-900/80 rounded-2xl p-4 flex items-start gap-3.5 animate-slide-up shadow-lg">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping mt-1.5 shrink-0" />
+            <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex items-start gap-3.5 animate-slide-up shadow-sm">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-1.5 shrink-0" />
               <div className="text-left space-y-0.5">
-                <span className="text-xs font-mono font-black text-emerald-400 block uppercase tracking-wider">Sync Successful</span>
-                <p className="text-xs text-slate-300 leading-relaxed font-sans">Emergency records successfully compiled in local browser sandbox. The scannable Rescuer QR code has been dynamically updated.</p>
+                <span className="text-xs font-mono font-bold text-emerald-700 block uppercase tracking-wider">Sync Successful</span>
+                <p className="text-xs text-slate-600 leading-relaxed font-sans">Emergency records successfully compiled in local browser sandbox. The scannable Rescuer QR code has been dynamically updated.</p>
               </div>
             </div>
           )}

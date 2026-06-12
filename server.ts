@@ -157,7 +157,7 @@ if (process.env.NODE_ENV !== "production") {
   startVite();
 } else {
   app.use(express.static(buildPath));
-  app.get("*", (req, res) => {
+  app.get("*", (_req, res) => {
     res.sendFile(path.join(buildPath, "index.html"));
   });
 

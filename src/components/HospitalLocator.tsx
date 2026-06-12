@@ -13,16 +13,11 @@ Map,
 Loader2,
 AlertTriangle,
 Activity,
-PhoneCall,
-ShieldAlert,
-ClipboardCheck,
 X,
-Volume2,
 Info
 } from 'lucide-react';
 
-// Default center (Mumbai Chhatrapati Shivaji)
-const DEFAULT_CENTER = { lat: 19.0760, lng: 72.8777 };
+// Default center (India)
 const INDIA_DEFAULT_CENTER = { lat: 20.5937, lng: 78.9629 };
 
 interface HealthcarePlace {
@@ -399,8 +394,8 @@ const [gpsCoordinates, setGpsCoordinates] = useState<{ lat: number, lng: number 
 const [mapCenter, setMapCenter] = useState<{ lat: number, lng: number }>(INDIA_DEFAULT_CENTER);
 const [mapZoom, setMapZoom] = useState<number>(5);
   const [locPermission, setLocPermission] = useState<'prompt' | 'granted' | 'denied'>('prompt');
-const [searchRadius, setSearchRadius] = useState<number>(50); // km
-const [isLoading, setIsLoading] = useState(false);
+  const searchRadius = 50; // km
+  const [isLoading, setIsLoading] = useState(false);
 const [places, setPlaces] = useState<HealthcarePlace[]>(ALL_INDIA_HOSPITALS);
 const [selectedPlaceId, setSelectedPlaceId] = useState<string | null>(null);
   const [apiLogs, setApiLogs] = useState<string>('Sajivani GPS Engine initialized with All India Database.');
@@ -492,9 +487,18 @@ mapInstanceRef.current = map;
 markersGroupRef.current = L.layerGroup().addTo(map);
 }
 
-return () => {
-// Keep map reference cached or remove on completely clean unmount
-};
+    return () => {
+      if (mapInstanceRef.current) {
+        try {
+          mapInstanceRef.current.remove();
+        } catch (e) {
+          console.warn("Error removing map instance:", e);
+        }
+        mapInstanceRef.current = null;
+        markersGroupRef.current = null;
+        tileLayerRef.current = null;
+      }
+    };
 }, [leafletLoaded]);
 
 // 2b. Map Layer Switcher Sync
@@ -548,8 +552,8 @@ markersGroupRef.current.clearLayers();
     if (locPermission === 'granted') {
       const gpsHtml = `
        <div class="relative flex items-center justify-center pointer-events-none">
-          <div class="absolute w-8 h-8 rounded-full bg-blue-500/35 border border-blue-400 animate-ping"></div>
-          <div class="w-4 h-4 rounded-full bg-blue-600 border-2 border-white shadow-md"></div>
+          <div class="absolute w-6 h-6 rounded-full bg-blue-500/20 border border-blue-400"></div>
+          <div class="w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white shadow-md"></div>
        </div>
      `;
       const gpsIcon = L.divIcon({
@@ -596,11 +600,11 @@ const marker = L.marker([p.lat, p.lng], { icon: hospitalIcon })
 const popupHtml = `
        <div class="p-1 text-slate-800 text-left max-w-[210px] sm:max-w-[240px]" style="font-family: sans-serif; line-height: 1.4;">
          <strong class="text-xs font-black block leading-tight text-slate-900" style="margin-bottom: 2px;">${p.name}</strong>
-         <span class="text-[9px] uppercase font-mono tracking-wider text-rose-600 block mt-1 font-bold">
+         <span class="text-[0.56rem] uppercase font-mono tracking-wider text-rose-600 block mt-1 font-bold">
            ${p.type.replace('_', ' ').toUpperCase()} &bull; ${p.distance !== undefined ? p.distance.toFixed(1) + ' km' : ''}
          </span>
-         <p class="text-[10px] text-slate-500 mt-1 mb-0 leading-normal" style="margin: 4px 0 0; color: #64748b;">${p.address}</p>
-         ${p.phone ? `<p class="text-[10px] text-slate-700 mt-1.5 leading-normal font-bold" style="margin: 4px 0 0; color: #1e293b;">📞 ${p.phone}</p>` : ''}
+         <p class="text-[0.625rem] text-slate-500 mt-1 mb-0 leading-normal" style="margin: 4px 0 0; color: #64748b;">${p.address}</p>
+         ${p.phone ? `<p class="text-[0.625rem] text-slate-700 mt-1.5 leading-normal font-bold" style="margin: 4px 0 0; color: #1e293b;">📞 ${p.phone}</p>` : ''}
        </div>
      `;
 
@@ -732,7 +736,6 @@ const OVERPASS_MIRRORS = [
 ];
 
 let data: any = null;
-let fallbackToAllIndia = false;
 
 // Sequential Mirror Retry Loop with safe, responsive timeouts
 for (const mirror of OVERPASS_MIRRORS) {
@@ -775,27 +778,26 @@ const expandedQuery = `[out:json][timeout:25];
 );
 out center;`;
 
-for (const mirror of OVERPASS_MIRRORS) {
-const hostname = new URL(mirror).hostname;
-const url = `${mirror}?data=${encodeURIComponent(expandedQuery)}`;
-const controller = new AbortController();
-const tId = setTimeout(() => controller.abort(), 12000);
+    for (const mirror of OVERPASS_MIRRORS) {
+      const url = `${mirror}?data=${encodeURIComponent(expandedQuery)}`;
+      const controller = new AbortController();
+      const tId = setTimeout(() => controller.abort(), 12000);
 
-try {
-const response = await fetch(url, { signal: controller.signal });
-clearTimeout(tId);
-if (response.ok) {
-const expData = await response.json();
-if (expData?.elements?.length > 0) {
-elements = expData.elements;
-break;
-}
-}
-} catch (err: any) {
-clearTimeout(tId);
-}
-}
-}
+      try {
+        const response = await fetch(url, { signal: controller.signal });
+        clearTimeout(tId);
+        if (response.ok) {
+          const expData = await response.json();
+          if (expData?.elements?.length > 0) {
+            elements = expData.elements;
+            break;
+          }
+        }
+      } catch (err: any) {
+        clearTimeout(tId);
+      }
+    }
+  }
 
 if (elements.length === 0) {
 setApiLogs('Search returned zero active hospital listings in this radius.');
@@ -935,23 +937,6 @@ setPlaces(initialSorted);
     };
 }, []);
 
-const resetToAllIndia = () => {
-setSelectedMetro('all');
-setMapCenter(INDIA_DEFAULT_CENTER);
-setMapZoom(5);
-
-// Sort and calculate distance dynamically based on INDIA_DEFAULT_CENTER
-const resetSorted = ALL_INDIA_HOSPITALS.map(h => ({
-...h,
-distance: +calculateDistance(INDIA_DEFAULT_CENTER.lat, INDIA_DEFAULT_CENTER.lng, h.lat, h.lng).toFixed(2)
-})).sort((a, b) => (a.distance || 0) - (b.distance || 0));
-
-setPlaces(resetSorted);
-setSelectedPlaceId(null);
-setSearchCity('');
-setSearchState('');
-setApiLogs('Active map and results reset to All India view.');
-};
 
 const handleSearchCityState = async (e: React.FormEvent) => {
 e.preventDefault();
@@ -1026,22 +1011,6 @@ setIsLoading(false);
 }
 };
 
-// Indian Metro Zone Quick Jump
-const handleJumpToMetro = (metro: string) => {
-setSelectedMetro(metro);
-let coords = DEFAULT_CENTER;
-if (metro === 'mumbai') coords = { lat: 19.0760, lng: 72.8777 };
-else if (metro === 'delhi') coords = { lat: 28.6139, lng: 77.2090 };
-else if (metro === 'bengaluru') coords = { lat: 12.9716, lng: 77.5946 };
-else if (metro === 'pune') coords = { lat: 18.5204, lng: 73.8567 };
-else if (metro === 'ahmedabad') coords = { lat: 23.0225, lng: 72.5714 };
-
-setGpsCoordinates(coords);
-setMapCenter(coords);
-setMapZoom(12);
-setApiLogs(`Active station jumped to Indian Metro: ${metro.toUpperCase()}`);
-loadCityFallback(metro, coords);
-};
 
 // Removed searchRadius event synchronization watcher
 
@@ -1052,33 +1021,30 @@ const selectedPlace = places.find(p => p.id === selectedPlaceId);
 return (
 <div className="space-y-6" id="open-care-locator-root">
 
-      {/* Visual Workspace Subheader */}
-      <div className="bg-white border border-slate-200 p-5 rounded-3xl flex flex-col md:flex-row gap-5 justify-between items-start md:items-center shadow-sm">
-        <div className="space-y-1 text-left">
-<div className="flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 shrink-0 inline-block animate-pulse" />
-            <span className="text-xs uppercase font-mono tracking-wider font-extrabold text-emerald-600 block">
-              OpenStreetMap + Local GPS Feed
-</span>
-</div>
-          <h3 className="text-sm font-extrabold text-slate-900 tracking-tight">{t.locator.title}</h3>
-          <p className="text-sm text-slate-600 max-w-xl">
+      {/* Header section */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-left">
+        <div className="space-y-0.5">
+          <div className="flex items-center gap-2">
+            <Compass className="w-5 h-5 text-emerald-500 shrink-0" />
+            <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">{t.locator.title}</h3>
+          </div>
+          <p className="text-xs text-slate-500 max-w-xl">
             {t.locator.subtitle}
-</p>
-</div>
+          </p>
+        </div>
 
         {/* Scan & Locate Area trigger button directly targeting browser request */}
         <button 
           onClick={() => setShowPermissionModal(true)}
           disabled={isLoading}
-          className={`${isLoading ? 'bg-slate-500 cursor-not-allowed opacity-90' : 'bg-slate-900 hover:bg-slate-800 cursor-pointer'} text-white rounded-xl py-2.5 px-4 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 shadow-md`}
+          className={`${isLoading ? 'bg-slate-500 cursor-not-allowed opacity-90' : 'bg-slate-700 hover:bg-slate-600 cursor-pointer'} text-white rounded-xl py-2 px-3.5 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 border border-slate-600`}
         >
           {isLoading ? (
-            <Loader2 className="w-4 h-4 text-white animate-spin" />
+            <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
           ) : (
-            <Compass className="w-4 h-4 text-emerald-400 animate-pulse" />
+            <Compass className="w-3.5 h-3.5 text-slate-350" />
           )}
-          <span>{isLoading ? 'Scanning GPS...' : t.locator.scanBtn}</span>
+          <span>{isLoading ? 'Scanning...' : t.locator.scanBtn}</span>
         </button>
       </div>
 
@@ -1130,7 +1096,7 @@ placeholder="e.g. Maharashtra, Karnataka"
 <button
 type="submit"
 disabled={isLoading}
-className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-md cursor-pointer transition-all uppercase tracking-wider h-10 flex items-center justify-center gap-1.5"
+className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-350 text-white font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer transition-all uppercase tracking-wider h-10 flex items-center justify-center gap-1.5 border border-slate-600"
 >
 {isLoading ? (
 <>
@@ -1168,31 +1134,31 @@ className="w-full bg-slate-900 hover:bg-slate-800 disabled:bg-slate-300 text-whi
                     <p className="text-slate-700 font-sans font-medium">{errorText}</p>
 </div>
 </div>
-                <div className="bg-white/90 border border-amber-100 p-2.5 rounded-xl text-[11px] text-slate-700 font-sans space-y-1.5 font-medium shadow-inner">
+                <div className="bg-white/90 border border-amber-100 p-2.5 rounded-xl text-[0.7rem] text-slate-700 font-sans space-y-1.5 font-medium shadow-inner">
                   <span className="font-bold text-slate-800 block">Immediate steps to trace your location:</span>
-                  <ul className="list-decimal pl-4 space-y-1 text-[11.5px] text-slate-600">
+                  <ul className="list-decimal pl-4 space-y-1 text-[0.72rem] text-slate-600">
                     <li>Verify your phone/computer's <strong>GPS / Location Services</strong> is toggled <strong>ON</strong>.</li>
                     <li>Look next to the URL bar above—click the site settings / lock icon and set <strong>Location access to "Allow"</strong>.</li>
                     <li>Once GPS is active, click the <strong>"Scan nearby care"</strong> button above again.</li>
                   </ul>
-                  <p className="text-[10px] text-slate-500 pt-0.5 font-semibold">
+                  <p className="text-[0.625rem] text-slate-500 pt-0.5 font-semibold">
                     * Sajivani strictly uses your location on-device to seek nearby emergency clinics, protecting your privacy.
                   </p>
                 </div>
-</div>
-)}
+              </div>
+            )}
 
-{/* Title of active results */}
-<div className="flex items-center gap-1.5 px-1 py-1">
-<Hospital className="w-4 h-4 text-rose-500 shrink-0" />
-<span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
-Found care centers ({places.length})
-</span>
-</div>
+            {/* Title of active results */}
+            <div className="flex items-center gap-1.5 px-1 py-1">
+              <Hospital className="w-4 h-4 text-rose-500 shrink-0" />
+              <span className="text-[0.625rem] font-mono font-bold uppercase tracking-wider text-slate-400">
+                Found care centers ({places.length})
+              </span>
+            </div>
 
-{/* National Fallback Alert for Remote/Unresolved Locations */}
-{!isLoading && places.length > 0 && places[0].distance !== undefined && places[0].distance > 50 && (
-<div className="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-left text-[11px] text-blue-900 leading-relaxed space-y-1 shadow-sm font-sans">
+            {/* National Fallback Alert for Remote/Unresolved Locations */}
+            {!isLoading && places.length > 0 && places[0].distance !== undefined && places[0].distance > 50 && (
+              <div className="p-3.5 bg-blue-50 border border-blue-200 rounded-2xl text-left text-[0.7rem] text-blue-900 leading-relaxed space-y-1 shadow-sm font-sans">
 <div className="flex items-start gap-2">
 <Info className="w-4 h-4 text-blue-600 shrink-0 mt-0.5" />
 <div>
@@ -1238,17 +1204,17 @@ className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
 <h4 className="text-xs font-bold leading-tight text-slate-900 line-clamp-2">
 {p.name}
 </h4>
-<span className="text-[9px] uppercase font-mono font-bold shrink-0 bg-slate-150 rounded px-1.5 py-0.5 text-slate-700">
-{p.type.replace('_', ' ')}
-</span>
-</div>
+                      <span className="text-[0.56rem] uppercase font-mono font-bold shrink-0 bg-slate-200 rounded px-1.5 py-0.5 text-slate-700">
+                        {p.type.replace('_', ' ')}
+                      </span>
+                    </div>
 
-<p className="text-[10.5px] text-slate-500 mt-1 lines-clamp-1 flex items-center gap-1 leading-snug">
-<MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-<span>{p.address}</span>
-</p>
+                    <p className="text-[0.65rem] text-slate-500 mt-1 lines-clamp-1 flex items-center gap-1 leading-snug">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span>{p.address}</span>
+                    </p>
 
-<div className="flex items-center gap-3 mt-2 text-[10px] font-mono text-slate-500">
+                    <div className="flex items-center gap-3 mt-2 text-[0.625rem] font-mono text-slate-500">
 {p.distance !== undefined && (
 <span className="font-bold text-slate-700">
 Distance: {p.distance.toFixed(1)} km
@@ -1298,7 +1264,7 @@ GPS Route
 
 {/* Coordinate telemetry metadata tag */}
 <div className="p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-left space-y-1">
-<div className="flex items-center justify-between text-[11px] font-mono">
+                  <div className="flex items-center justify-between text-[0.7rem] font-mono">
 <span className="text-slate-500 font-sans font-medium">Active GPS Telemetry:</span>
 <span className="text-slate-600 bg-white border border-slate-200 rounded px-1.5 py-0.5 font-bold">
 {gpsCoordinates.lat.toFixed(4)}, {gpsCoordinates.lng.toFixed(4)}
@@ -1311,38 +1277,38 @@ GPS Route
 <div className="lg:col-span-8 flex flex-col justify-between border border-slate-200 rounded-3xl overflow-hidden bg-slate-50 relative h-auto min-h-[380px] lg:min-h-[520px] shadow-sm order-1 lg:order-2">
 
 {/* Telemetry log tag overlay */}
-<div className="absolute top-4 left-4 z-[10] bg-slate-950/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-xl border border-slate-800 text-[10px] font-mono flex items-center gap-2 shadow-lg text-left">
-<span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping shrink-0" />
-            <span>Sajivani Live GIS Platform</span>
-</div>
+            <div className="absolute top-4 left-4 z-[10] bg-white/95 backdrop-blur-sm text-slate-800 px-3 py-1.5 rounded-xl border border-slate-200 text-[0.625rem] font-mono flex items-center gap-2 shadow-sm text-left">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+              <span>Sajivani Live GIS Platform</span>
+            </div>
 
-{/* Map Layer Switcher Overlay (Streets / Satellite) */}
-<div className="absolute top-4 right-4 z-[10] bg-white/95 backdrop-blur-md p-1 rounded-2xl border border-slate-200/80 shadow-lg flex items-center gap-1">
-<button
-onClick={() => setMapType('streets')}
-className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer ${mapType === 'streets' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
->
-<Map className="w-3.5 h-3.5" />
-<span>Map view</span>
-</button>
-<button
-onClick={() => setMapType('satellite')}
-className={`px-3 py-1.5 text-[10px] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer ${mapType === 'satellite' ? 'bg-slate-900 text-white shadow-sm' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
->
-<Globe className="w-3.5 h-3.5" />
-<span>Satellite</span>
-</button>
-</div>
+            {/* Map Layer Switcher Overlay (Streets / Satellite) */}
+            <div className="absolute top-4 right-4 z-[10] bg-white/95 backdrop-blur-sm p-1 rounded-2xl border border-slate-200 shadow-sm flex items-center gap-1">
+              <button
+                onClick={() => setMapType('streets')}
+                className={`px-3 py-1.5 text-[0.625rem] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer border ${mapType === 'streets' ? 'bg-slate-700 border-slate-600 text-white' : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+              >
+                <Map className="w-3.5 h-3.5" />
+                <span>Map view</span>
+              </button>
+              <button
+                onClick={() => setMapType('satellite')}
+                className={`px-3 py-1.5 text-[0.625rem] font-bold rounded-xl transition-all flex items-center gap-1.5 outline-none cursor-pointer border ${mapType === 'satellite' ? 'bg-slate-700 border-slate-600 text-white' : 'border-transparent text-slate-600 hover:text-slate-900 hover:bg-slate-50'}`}
+              >
+                <Globe className="w-3.5 h-3.5" />
+                <span>Satellite</span>
+              </button>
+            </div>
 
-{/* Dynamic Leaflet GIS Map Canvas */}
-<div className="flex-1 w-full bg-slate-100 relative h-[320px] sm:h-[400px] lg:h-[480px] z-[5] overflow-hidden">
-{!leafletLoaded ? (
-<div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-slate-900 text-slate-400 p-6">
-<Loader2 className="w-7 h-7 text-rose-500 animate-spin" />
-<span className="font-mono text-xs text-slate-300 font-semibold uppercase tracking-wider">
-                  Configuring Sajivani Live Tracker...
-</span>
-<p className="text-[11px] text-slate-500 font-sans max-w-xs text-center">
+            {/* Dynamic Leaflet GIS Map Canvas */}
+            <div className="flex-1 w-full bg-slate-100 relative h-[320px] sm:h-[400px] lg:h-[480px] z-[5] overflow-hidden">
+              {!leafletLoaded ? (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-3 bg-slate-50 text-slate-500 p-6">
+                  <Loader2 className="w-6 h-6 text-rose-500 animate-spin" />
+                  <span className="font-mono text-xs text-slate-700 font-bold uppercase tracking-wider">
+                    Configuring Sajivani Live Tracker...
+                  </span>
+                  <p className="text-[0.7rem] text-slate-500 font-sans max-w-xs text-center">
 Syncing local hospital databases and loading live GPS mapping layers.
 </p>
 </div>
@@ -1357,23 +1323,23 @@ style={{ height: '100%', minHeight: '320px' }}
 
 {/* Directions navigation bar under map */}
 {selectedPlace && (
-<div className="bg-slate-950 text-white p-4 border-t border-slate-800 text-left text-xs z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+<div className="bg-slate-50 text-slate-800 p-4 border-t border-slate-200 text-left text-xs z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
 <div className="space-y-1">
-<div className="flex items-center gap-1.5 text-rose-400 font-mono text-[10px] tracking-wider uppercase font-bold">
-<Navigation2 className="w-3.5 h-3.5 text-rose-500 fill-rose-500 animate-pulse" />
-Target Medical Port Selected
-</div>
-<p className="text-slate-300 font-bold text-xs leading-snug">
-{selectedPlace.name} &bull; {selectedPlace.address}
-</p>
-</div>
-<div className="flex items-center gap-2 shrink-0">
-{selectedPlace.website && (
-<a 
-href={selectedPlace.website} 
-target="_blank" 
-rel="noopener noreferrer" 
-className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2 border border-slate-700 rounded-xl font-mono text-[10.5px] font-bold flex items-center gap-1 transition-all"
+                <div className="flex items-center gap-1.5 text-rose-700 font-mono text-[0.625rem] tracking-wider uppercase font-bold">
+                  <Navigation2 className="w-3.5 h-3.5 text-rose-600 fill-rose-500/25" />
+                  Target Medical Port Selected
+                </div>
+                <p className="text-slate-700 font-bold text-xs leading-snug">
+                  {selectedPlace.name} &bull; {selectedPlace.address}
+                </p>
+              </div>
+              <div className="flex items-center gap-2 shrink-0">
+                {selectedPlace.website && (
+                  <a 
+                    href={selectedPlace.website} 
+                    target="_blank" 
+                    rel="noopener noreferrer" 
+                    className="bg-white hover:bg-slate-100 text-slate-700 px-3 py-2 border border-slate-200 rounded-xl font-mono text-[0.65rem] font-bold flex items-center gap-1 transition-all"
 >
 <Globe className="w-3.5 h-3.5 text-slate-400" />
 Web Portal
@@ -1383,7 +1349,7 @@ Web Portal
 href={`https://www.google.com/maps/dir/?api=1&destination=${selectedPlace.lat},${selectedPlace.lng}`}
 target="_blank"
 rel="noopener noreferrer"
-className="bg-rose-600 hover:bg-rose-500 text-white px-4 py-2 rounded-xl font-sans text-xs font-bold block transition-all"
+className="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl font-sans text-xs font-bold block transition-all border border-rose-500"
 >
 Get Route
 </a>
@@ -1392,14 +1358,14 @@ Get Route
 )}
 
 {/* GIS dynamic console logs */}
-<div className="bg-slate-950 p-2.5 border-t border-slate-900 font-mono text-xs text-slate-400 flex items-center gap-2 text-left justify-between z-10">
+<div className="bg-slate-100 p-2.5 border-t border-slate-200 font-mono text-xs text-slate-600 flex items-center gap-2 text-left justify-between z-10">
 <div className="flex items-center gap-2 truncate">
-<Activity className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-<span className="text-slate-400 uppercase font-bold shrink-0">GIS LOG:</span>
+<Activity className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+<span className="text-slate-500 uppercase font-bold shrink-0">GIS LOG:</span>
 <span className="truncate">{apiLogs}</span>
 </div>
 {selectedPlace && (
-<span className="text-slate-500 block shrink-0 font-bold text-xs">
+<span className="text-slate-600 block shrink-0 font-bold text-xs">
 Distance: {selectedPlace.distance?.toFixed(1) || '0'} km
 </span>
 )}
@@ -1423,8 +1389,8 @@ Distance: {selectedPlace.distance?.toFixed(1) || '0'} km
 
             {/* Header Icon & Title */}
             <div className="text-center space-y-3">
-              <div className="w-14 h-14 bg-rose-50 border border-rose-100 rounded-full flex items-center justify-center mx-auto text-rose-500 animate-pulse">
-                <Compass className="w-7 h-7 text-rose-500" />
+              <div className="w-14 h-14 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-500 animate-pulse">
+                <Compass className="w-7 h-7 text-slate-500" />
               </div>
               <div className="space-y-1">
                 <h3 className="text-lg font-black text-slate-900 tracking-tight">
@@ -1437,37 +1403,37 @@ Distance: {selectedPlace.distance?.toFixed(1) || '0'} km
             </div>
 
             {/* Instructional Content */}
-            <div className="bg-slate-50 border border-slate-150 p-4.5 rounded-2xl text-[11px] text-slate-705 space-y-4 font-sans leading-relaxed">
+            <div className="bg-slate-50 border border-slate-200 p-4.5 rounded-2xl text-[0.7rem] text-slate-700 space-y-4 font-sans leading-relaxed">
               <p className="font-extrabold text-slate-900 leading-normal">
                 To show premium cardiac care and clinics around you, Sajivani maps your location using active physical GPS satellite coordinates correctly:
               </p>
               
               <ul className="space-y-3">
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[0.625rem] font-bold flex items-center justify-center shrink-0 mt-0.5">
                     1
                   </span>
                   <div>
                     <span className="font-extrabold text-slate-950 block">Scan Device GPS Panel</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">Please pull down your screen quick settings (mobile) or click your clock bar settings (desktop) and switch location status to **ON**.</span>
+                    <span className="text-slate-500 text-[0.7rem] leading-tight block">Please pull down your screen quick settings (mobile) or click your clock bar settings (desktop) and switch location status to **ON**.</span>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[0.625rem] font-bold flex items-center justify-center shrink-0 mt-0.5">
                     2
                   </span>
                   <div>
                     <span className="font-extrabold text-slate-950 block">Approve Browser Geolocation Prompt</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">Click "Allow/Permit" once the system requests coordinate telemetry.</span>
+                    <span className="text-slate-500 text-[0.7rem] leading-tight block">Click "Allow/Permit" once the system requests coordinate telemetry.</span>
                   </div>
                 </li>
                 <li className="flex items-start gap-2.5">
-                  <span className="w-5 h-5 rounded-full bg-slate-900 text-white font-mono text-[10px] font-bold flex items-center justify-center shrink-0 mt-0.5">
+                  <span className="w-5 h-5 rounded-full bg-slate-100 border border-slate-200 text-slate-700 font-mono text-[0.625rem] font-bold flex items-center justify-center shrink-0 mt-0.5">
                     3
                   </span>
                   <div>
                     <span className="font-extrabold text-slate-950 block">If Using Sandbox Preview</span>
-                    <span className="text-slate-500 text-[11px] leading-tight block">If location is blocked in this side iframe, please click the <strong>"Open in New Tab"</strong> arrow button above to authorize GPS cleanly.</span>
+                    <span className="text-slate-500 text-[0.7rem] leading-tight block">If location is blocked in this side iframe, please click the <strong>"Open in New Tab"</strong> arrow button above to authorize GPS cleanly.</span>
                   </div>
                 </li>
               </ul>
@@ -1480,9 +1446,9 @@ Distance: {selectedPlace.distance?.toFixed(1) || '0'} km
                   setShowPermissionModal(false);
                   triggerGpsScan();
                 }}
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs py-3 rounded-xl shadow-md transition-all uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full bg-slate-700 hover:bg-slate-600 text-white font-extrabold text-xs py-3 rounded-xl transition-all uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer border border-slate-600"
               >
-                <Compass className="w-4 h-4 text-emerald-400" />
+                <Compass className="w-4 h-4 text-slate-350" />
                 <span>GPS is active &bull; start scan</span>
               </button>
               <button
