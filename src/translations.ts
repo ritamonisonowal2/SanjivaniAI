@@ -160,6 +160,31 @@ export interface TranslationScheme {
     categoryArrest: string;
     categoryFailure: string;
   };
+  home: {
+    heroTitle: string;
+    heroSubtitle: string;
+    ctaEmergency: string;
+    ctaLearn: string;
+    featuresTitle: string;
+    featuresSubtitle: string;
+    featureSymptomTitle: string;
+    featureSymptomDesc: string;
+    featureLocatorTitle: string;
+    featureLocatorDesc: string;
+    featureCprTitle: string;
+    featureCprDesc: string;
+    featureIdTitle: string;
+    featureIdDesc: string;
+    featureMatrixTitle: string;
+    featureMatrixDesc: string;
+    emergencyCardTitle: string;
+    emergencyCardDesc: string;
+    emergencyCardBtn: string;
+    didYouKnowTitle: string;
+    didYouKnowText1: string;
+    didYouKnowText2: string;
+    didYouKnowText3: string;
+  };
 }
 
 export const TRANSLATIONS: TranslationScheme = {
@@ -323,5 +348,30 @@ export const TRANSLATIONS: TranslationScheme = {
     categoryAttack: "Questions about My Heart Attack recovery:",
     categoryArrest: "Questions about My Arrhythmia/Heart Stop:",
     categoryFailure: "Questions about My Heart Failure (Weak Heart) management:"
+  },
+  home: {
+    heroTitle: "Sanjivani AI: Your Life-Saving Heart Companion",
+    heroSubtitle: "An educational platform built to empower everyday people to take immediate, confident action during sudden cardiac emergencies, track symptoms, and locate nearby help.",
+    ctaEmergency: "Instant CPR Rhythm Guide",
+    ctaLearn: "Learn Cardiac Conditions",
+    featuresTitle: "Explore Care Modules",
+    featuresSubtitle: "Select any tool below to begin assessing symptoms, finding care facilities, or learning emergency procedures.",
+    featureSymptomTitle: "Check Symptoms",
+    featureSymptomDesc: "Answer basic clinical questions to estimate cardiac risk levels.",
+    featureLocatorTitle: "Find Hospitals",
+    featureLocatorDesc: "Locate nearby emergency rooms and cardiac care units instantly.",
+    featureCprTitle: "CPR AED Guide",
+    featureCprDesc: "Interactive guide with a live audio-visual metronome for chest compressions.",
+    featureIdTitle: "Medical ID Card",
+    featureIdDesc: "Create a medical info profile and scanable QR code for emergency responders.",
+    featureMatrixTitle: "Condition Matrix",
+    featureMatrixDesc: "Compare symptoms and protocols of heart attack, cardiac arrest, and failure.",
+    emergencyCardTitle: "In a Cardiac Emergency?",
+    emergencyCardDesc: "Every second counts. If someone is unresponsive and not breathing, start CPR immediately and use an AED if available. Call local emergency responders.",
+    emergencyCardBtn: "Call Emergency (112 / 108)",
+    didYouKnowTitle: "Did You Know?",
+    didYouKnowText1: "Around 70% of out-of-hospital cardiac arrests occur at home. Bystander CPR can double or triple survival chances.",
+    didYouKnowText2: "A heart attack is a circulatory 'plumbing' issue, while cardiac arrest is an electrical 'rhythm' issue. Both are high emergencies.",
+    didYouKnowText3: "Brain damage starts in just 4 minutes after cardiac arrest without blood flow. Keeping compressions continuous saves lives."
   }
 };

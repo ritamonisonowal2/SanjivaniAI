@@ -571,13 +571,24 @@ iconAnchor: [16, 16]
 // Nearby registered Healthcare services
 places.forEach((p) => {
 const isSelected = selectedPlaceId === p.id;
+
+const getMarkerStyles = (type: string, selected: boolean) => {
+  if (selected) {
+    if (type === 'hospital') return 'bg-rose-600 border-rose-300 text-white scale-110 ring-4 ring-rose-500/25';
+    if (type === 'clinic') return 'bg-sky-600 border-sky-300 text-white scale-110 ring-4 ring-sky-500/25';
+    if (type === 'doctors') return 'bg-amber-600 border-amber-300 text-white scale-110 ring-4 ring-amber-500/25';
+    return 'bg-emerald-600 border-emerald-300 text-white scale-110 ring-4 ring-emerald-500/25';
+  } else {
+    if (type === 'hospital') return 'bg-white border-rose-200 text-rose-600 hover:border-rose-400 hover:scale-105';
+    if (type === 'clinic') return 'bg-white border-sky-200 text-sky-600 hover:border-sky-400 hover:scale-105';
+    if (type === 'doctors') return 'bg-white border-amber-200 text-amber-600 hover:border-amber-400 hover:scale-105';
+    return 'bg-white border-emerald-200 text-emerald-600 hover:border-emerald-400 hover:scale-105';
+  }
+};
+
 const markerHtml = `
        <div class="transform transition-all duration-200" style="cursor: pointer;">
-         <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg border transition-all ${
-           isSelected 
-             ? 'bg-rose-600 border-rose-300 text-white scale-110 ring-4 ring-rose-500/25' 
-             : 'bg-white border-slate-200 text-rose-500 hover:border-rose-400 hover:scale-105'
-         }">
+         <div class="w-9 h-9 rounded-full flex items-center justify-center shadow-lg border transition-all ${getMarkerStyles(p.type, isSelected)}">
            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="w-4.5 h-4.5">
              <path d="M12 6v12"></path>
              <path d="M9 9h6"></path>
@@ -1028,7 +1039,7 @@ return (
             <Compass className="w-5 h-5 text-emerald-500 shrink-0" />
             <h3 className="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight">{t.locator.title}</h3>
           </div>
-          <p className="text-xs text-slate-500 max-w-xl">
+          <p className="text-xs text-slate-505 max-w-xl font-sans">
             {t.locator.subtitle}
           </p>
         </div>
@@ -1037,25 +1048,29 @@ return (
         <button 
           onClick={() => setShowPermissionModal(true)}
           disabled={isLoading}
-          className={`${isLoading ? 'bg-slate-500 cursor-not-allowed opacity-90' : 'bg-slate-700 hover:bg-slate-600 cursor-pointer'} text-white rounded-xl py-2 px-3.5 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 border border-slate-600`}
+          className={`${
+            isLoading 
+              ? 'bg-slate-500 cursor-not-allowed opacity-90' 
+              : 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 cursor-pointer shadow-sm shadow-emerald-600/10'
+          } text-white rounded-xl py-2 px-4 text-xs font-bold transition-all shrink-0 flex items-center justify-center gap-1.5 border border-emerald-500`}
         >
           {isLoading ? (
             <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
           ) : (
-            <Compass className="w-3.5 h-3.5 text-slate-350" />
+            <Compass className="w-3.5 h-3.5 text-emerald-200" />
           )}
           <span>{isLoading ? 'Scanning...' : t.locator.scanBtn}</span>
         </button>
       </div>
 
       {/* Search by City & State Panel */}
-      <div className="bg-white border border-slate-200 p-5 rounded-3xl shadow-sm text-left space-y-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+      <div className="bg-white border border-slate-200 p-6 rounded-3xl shadow-sm text-left space-y-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 pb-3 border-b border-slate-100">
           <div>
-            <h4 className="text-xs font-bold text-slate-800 uppercase tracking-widest font-mono">
+            <h4 className="text-xs font-black text-slate-900 uppercase tracking-widest font-mono">
               Explore Cardiac Facilities by Location
             </h4>
-            <p className="text-xs text-slate-600 mt-0.5">
+            <p className="text-xs text-slate-500 mt-0.5 font-sans">
               Type any Indian city and state to load local emergency centers
             </p>
           </div>
@@ -1063,56 +1078,56 @@ return (
 
         <form onSubmit={handleSearchCityState} className="grid grid-cols-1 sm:grid-cols-12 gap-3 pt-1">
           <div className="sm:col-span-5 relative">
-<label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
-City Name *
-</label>
-<div className="relative">
-<Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
-<input
-type="text"
-value={searchCity}
-onChange={(e) => setSearchCity(e.target.value)}
-placeholder="e.g. Pune, Bangalore, Kolkata"
+            <label className="text-[0.625rem] font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
+              City Name *
+            </label>
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={searchCity}
+                onChange={(e) => setSearchCity(e.target.value)}
+                placeholder="e.g. Pune, Bangalore, Kolkata"
                 className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl pl-9 pr-4 py-2.5 outline-none transition-all"
-required
-/>
-</div>
-</div>
+                required
+              />
+            </div>
+          </div>
 
           <div className="sm:col-span-4">
-<label className="text-xs font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
-State (Optional)
-</label>
-<input
-type="text"
-value={searchState}
-onChange={(e) => setSearchState(e.target.value)}
-placeholder="e.g. Maharashtra, Karnataka"
+            <label className="text-[0.625rem] font-mono font-bold uppercase tracking-wider text-slate-500 block mb-1">
+              State (Optional)
+            </label>
+            <input
+              type="text"
+              value={searchState}
+              onChange={(e) => setSearchState(e.target.value)}
+              placeholder="e.g. Maharashtra, Karnataka"
               className="w-full bg-slate-50 border border-slate-200 focus:border-slate-400 focus:bg-white text-xs font-semibold rounded-xl px-4 py-2.5 outline-none transition-all"
-/>
-</div>
+            />
+          </div>
 
           <div className="sm:col-span-3 flex items-end">
-<button
-type="submit"
-disabled={isLoading}
-className="w-full bg-slate-700 hover:bg-slate-600 disabled:bg-slate-350 text-white font-bold text-xs py-2.5 px-4 rounded-xl cursor-pointer transition-all uppercase tracking-wider h-10 flex items-center justify-center gap-1.5 border border-slate-600"
->
-{isLoading ? (
-<>
-                  <Loader2 className="w-4 h-4 animate-spin text-white animate-duration-1000" />
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-slate-800 hover:bg-slate-900 active:bg-slate-950 disabled:bg-slate-350 text-white font-extrabold text-xs py-2.5 px-4 rounded-xl cursor-pointer transition-all uppercase tracking-wider h-10 flex items-center justify-center gap-1.5 border border-slate-700 shadow-sm"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-white" />
                   <span>Searching...</span>
-</>
-) : (
-<>
-<Search className="w-4 h-4 text-slate-300" />
+                </>
+              ) : (
+                <>
+                  <Search className="w-4 h-4 text-slate-305" />
                   <span>Search Near</span>
-</>
-)}
-</button>
-</div>
-</form>
-</div>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
 
 {/* Main dual column map view */}
 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
@@ -1182,83 +1197,91 @@ No local diagnostic listings resolved within your direct search range via satell
 No health units found in this radial search.
 </div>
 ) : (
-<div className="flex flex-col gap-2.5">
-{places.map((p) => {
-const isSelected = selectedPlaceId === p.id;
-return (
-<div 
-key={p.id}
-onClick={() => {
-setSelectedPlaceId(p.id);
-setMapCenter({ lat: p.lat, lng: p.lng });
-setMapZoom(13);
-setApiLogs(`Lock tracking element: "${p.name}".`);
-}}
-className={`p-4 rounded-xl border text-left cursor-pointer transition-all ${
-                       isSelected 
-                         ? 'bg-rose-50/50 border-rose-300 ring-1 ring-rose-300 shadow-sm' 
-                         : 'bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50'
-                     }`}
->
-<div className="flex justify-between items-start gap-1">
-<h4 className="text-xs font-bold leading-tight text-slate-900 line-clamp-2">
-{p.name}
-</h4>
-                      <span className="text-[0.56rem] uppercase font-mono font-bold shrink-0 bg-slate-200 rounded px-1.5 py-0.5 text-slate-700">
-                        {p.type.replace('_', ' ')}
-                      </span>
-                    </div>
+                  <div className="flex flex-col gap-3 font-sans">
+                    {places.map((p) => {
+                      const isSelected = selectedPlaceId === p.id;
+                      
+                      const getTypeColors = (type: string) => {
+                        if (type === 'hospital') return 'bg-rose-50 border border-rose-100 text-rose-700';
+                        if (type === 'clinic') return 'bg-sky-50 border border-sky-100 text-sky-700';
+                        if (type === 'doctors') return 'bg-amber-50 border border-amber-100 text-amber-700';
+                        return 'bg-emerald-50 border border-emerald-100 text-emerald-700';
+                      };
 
-                    <p className="text-[0.65rem] text-slate-500 mt-1 lines-clamp-1 flex items-center gap-1 leading-snug">
-                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                      <span>{p.address}</span>
-                    </p>
+                      return (
+                        <div 
+                          key={p.id}
+                          onClick={() => {
+                            setSelectedPlaceId(p.id);
+                            setMapCenter({ lat: p.lat, lng: p.lng });
+                            setMapZoom(13);
+                            setApiLogs(`Lock tracking element: "${p.name}".`);
+                          }}
+                          className={`p-4 rounded-2xl border text-left cursor-pointer transition-all duration-200 ${
+                            isSelected 
+                              ? 'bg-rose-50/45 border-rose-350 shadow-xs ring-2 ring-rose-500/10 scale-[1.01]' 
+                              : 'bg-white border-slate-200 hover:border-rose-200/70 hover:bg-slate-50/50 shadow-2xs hover:-translate-y-[1px]'
+                          }`}
+                        >
+                          <div className="flex justify-between items-start gap-3">
+                            <h4 className="text-xs font-extrabold leading-snug text-slate-900 line-clamp-2">
+                              {p.name}
+                            </h4>
+                            <span className={`text-[0.56rem] uppercase font-mono font-black shrink-0 rounded px-1.5 py-0.5 ${getTypeColors(p.type)}`}>
+                              {p.type.replace('_', ' ')}
+                            </span>
+                          </div>
 
-                    <div className="flex items-center gap-3 mt-2 text-[0.625rem] font-mono text-slate-500">
-{p.distance !== undefined && (
-<span className="font-bold text-slate-700">
-Distance: {p.distance.toFixed(1)} km
-</span>
-)}
-{p.emergency === 'yes' && (
-<span className="text-emerald-600 font-bold uppercase tracking-wider">
-&bull; 24h ER Active
-</span>
-)}
-</div>
+                          <p className="text-[0.65rem] text-slate-500 mt-2 flex items-center gap-1 leading-snug font-sans font-medium">
+                            <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                            <span className="line-clamp-1">{p.address}</span>
+                          </p>
 
-{isSelected && (
-<div className="mt-3 pt-3 border-t border-slate-200 flex items-center gap-2">
-{p.phone ? (
-<a 
-href={`tel:${p.phone}`}
-onClick={(e) => e.stopPropagation()}
-className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-1.5 rounded-lg transition-colors flex items-center justify-center gap-1 mr-1"
->
-<Phone className="w-3.5 h-3.5 text-slate-500" />
-Call Center
-</a>
-) : (
-<div className="flex-1 text-xs text-slate-400 font-sans italic self-center">
-No telephone recorded
-</div>
-)}
-<a 
-href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
-target="_blank"
-rel="noopener noreferrer"
-onClick={(e) => e.stopPropagation()}
-className="flex-1 bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold py-1.5 rounded-lg transition-all flex items-center justify-center gap-1 cursor-pointer"
->
-<Navigation className="w-3.5 h-3.5 fill-white" />
-GPS Route
-</a>
-</div>
-)}
-</div>
-);
-})}
-</div>
+                          <div className="flex items-center gap-3 mt-2 text-[0.625rem] font-mono text-slate-500 font-bold">
+                            {p.distance !== undefined && (
+                              <span className="text-slate-700">
+                                Distance: {p.distance.toFixed(1)} km
+                              </span>
+                            )}
+                            {p.emergency === 'yes' && (
+                              <span className="text-emerald-600 font-black uppercase tracking-wider animate-pulse">
+                                &bull; 24h ER Active
+                              </span>
+                            )}
+                          </div>
+
+                          {isSelected && (
+                            <div className="mt-3.5 pt-3.5 border-t border-slate-200/80 flex items-center gap-2 animate-in fade-in duration-200">
+                              {p.phone ? (
+                                <a 
+                                  href={`tel:${p.phone}`}
+                                  onClick={(e) => e.stopPropagation()}
+                                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-1 border border-slate-200"
+                                >
+                                  <Phone className="w-3.5 h-3.5 text-slate-500" />
+                                  <span>Call Care</span>
+                                </a>
+                              ) : (
+                                <div className="flex-1 text-[0.625rem] text-slate-400 font-sans italic self-center pl-1 font-bold">
+                                  No contact listed
+                                </div>
+                              )}
+                              <a 
+                                href={`https://www.google.com/maps/dir/?api=1&destination=${p.lat},${p.lng}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="flex-1 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold py-2 rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer border border-rose-500 shadow-sm"
+                              >
+                                <Navigation className="w-3.5 h-3.5 fill-white" />
+                                <span>Directions</span>
+                              </a>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
 )}
 </div>
 

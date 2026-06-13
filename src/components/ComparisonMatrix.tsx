@@ -1,19 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ConditionDetail } from '../types';
 import { TRANSLATIONS } from '../translations';
-import { ShieldAlert, Plus, Minus, Activity } from 'lucide-react';
+import { 
+  ShieldAlert, 
+  Plus, 
+  Minus, 
+  Activity,
+  CheckCircle2,
+  XCircle,
+  HelpCircle,
+  AlertCircle,
+  BookOpen
+} from 'lucide-react';
 
 export default function ComparisonMatrix() {
   const t = TRANSLATIONS;
   const [expandedCard, setExpandedCard] = useState<'heart-attack' | 'cardiac-arrest' | 'heart-failure' | null>(null);
   const [activeMobileTab, setActiveMobileTab] = useState<'heart-attack' | 'cardiac-arrest' | 'heart-failure'>('heart-attack');
+  const [hoveredColumn, setHoveredColumn] = useState<'heart-attack' | 'cardiac-arrest' | 'heart-failure' | null>(null);
 
-  const getSystemBadgeColor = (_id: string) => {
-    return 'bg-slate-100 border-slate-200 text-slate-700 font-semibold';
+  useEffect(() => {
+    if (expandedCard) {
+      const timer = setTimeout(() => {
+        const element = document.getElementById(`pathology-deep-explorer-${expandedCard}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [expandedCard]);
+
+  const getSystemBadgeColor = (id: string) => {
+    if (id === 'heart-attack') return 'bg-rose-50 border-rose-200 text-rose-700 font-bold';
+    if (id === 'cardiac-arrest') return 'bg-amber-50 border-amber-200 text-amber-700 font-bold';
+    if (id === 'heart-failure') return 'bg-sky-50 border-sky-200 text-sky-700 font-bold';
+    return 'bg-slate-100 border-slate-200 text-slate-750 font-bold';
   };
 
-  const getHeaderHighlight = (_id: string) => {
-    return 'bg-slate-800';
+  const getHeaderHighlight = (id: string) => {
+    if (id === 'heart-attack') return 'bg-rose-500';
+    if (id === 'cardiac-arrest') return 'bg-amber-500';
+    if (id === 'heart-failure') return 'bg-sky-500';
+    return 'bg-slate-850';
   };
 
   const enConditions: ConditionDetail[] = [
@@ -152,53 +181,56 @@ export default function ComparisonMatrix() {
           {t.matrix.subtitle}
         </p>
       </div>      {/* Redesigned Premium Classic Table Mode */}
-      <div className="hidden md:block bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden text-left">
+      <div className="hidden md:block bg-white border border-slate-200 rounded-3xl shadow-md overflow-hidden text-left transition-shadow duration-300 hover:shadow-lg">
         
         {/* Table helper guide for mobile viewports */}
-        <div className="px-5 py-3.5 bg-slate-50 border-b border-slate-200/60 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs text-slate-500 font-sans font-medium">
+        <div className="px-6 py-4 bg-slate-50 border-b border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-slate-500 font-sans font-medium">
           <div className="flex items-center gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
-            <span>Swipe horizontally to compare the full clinical spectrum</span>
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Hover or click columns to deeply compare heart pathologies</span>
           </div>
-          <span className="font-semibold text-slate-400 font-sans">Cardiovascular Reference Matrix</span>
+          <span className="font-bold text-slate-400 font-mono tracking-wider uppercase">Cardiovascular Reference Matrix</span>
         </div>
 
         <div className="overflow-x-auto scroller-slim">
         <table className="w-full border-collapse min-w-[850px] table-fixed">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/20">
-              <th className="p-5 text-xs font-bold tracking-wider text-slate-500 uppercase w-[18%] text-left">
+            <tr className="border-b border-slate-200 bg-slate-50/40">
+              <th className="p-5 text-xs font-bold tracking-wider text-slate-400 uppercase w-[18%] text-left bg-slate-50/20">
                 Core Aspect
               </th>
               {currentConditions.map((cond) => {
                 const isSelected = expandedCard === cond.id;
+                const isHovered = hoveredColumn === cond.id;
                 
                 return (
                   <th 
                     key={cond.id} 
-                    className={`p-5 text-left transition-all relative cursor-pointer select-none group w-[27.33%] ${
-                      isSelected ? 'bg-slate-50/60 font-extrabold text-slate-950' : 'hover:bg-slate-50/30'
-                    }`}
+                    className={`p-5 text-left transition-all duration-200 relative cursor-pointer select-none group w-[27.33%] border-r border-slate-100 last:border-r-0 ${
+                      isSelected ? 'bg-slate-50/80 font-black text-slate-950' : 'hover:bg-slate-50/30'
+                    } ${isHovered ? 'bg-slate-50/60 shadow-inner' : ''}`}
                     onClick={() => setExpandedCard(isSelected ? null : cond.id)}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
                   >
-                    <div className="space-y-2 flex flex-col h-full justify-between">
+                    <div className="space-y-3.5 flex flex-col h-full justify-between">
                       <div>
-                        <span className={`inline-block px-2.5 py-0.5 text-xs font-sans font-semibold rounded-full border uppercase tracking-wider ${getSystemBadgeColor(cond.id)}`}>
+                        <span className={`inline-block px-3 py-1 text-[0.625rem] font-sans font-extrabold rounded-full border uppercase tracking-wider ${getSystemBadgeColor(cond.id)}`}>
                           {cond.system}
                         </span>
                       </div>
                       <div>
-                        <h4 className="text-sm md:text-base font-bold text-slate-900 group-hover:text-rose-600 transition-colors">
+                        <h4 className="text-sm md:text-base font-black text-slate-900 group-hover:text-rose-600 transition-colors">
                           {cond.name}
                         </h4>
-                        <p className="text-xs text-slate-500 italic font-medium mt-0.5">
+                        <p className="text-xs text-slate-400 italic font-bold mt-0.5">
                           {cond.pronunciation}
                         </p>
                       </div>
                     </div>
                     
                     {/* Active underline accent bar indicators */}
-                    <div className={`absolute bottom-0 left-0 right-0 h-[2.5px] transition-all duration-300 ${
+                    <div className={`absolute bottom-0 left-0 right-0 h-[3px] transition-all duration-300 ${
                       isSelected ? getHeaderHighlight(cond.id) : 'bg-transparent group-hover:bg-slate-200'
                     }`} />
                   </th>
@@ -207,86 +239,139 @@ export default function ComparisonMatrix() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-200">
-            
             {/* Row 1: Simplified Analogy */}
-            <tr className="hover:bg-slate-50/5 transition-colors">
-              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/10">
-                {t.matrix.analogy}
+            <tr className="hover:bg-slate-50/15 transition-colors">
+              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <HelpCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.matrix.analogy}</span>
               </td>
-              {currentConditions.map((cond) => (
-                <td key={cond.id} className="p-5 text-sm">
-                  <span className="inline-flex px-3 py-1 rounded-full border border-slate-200 bg-slate-50 text-slate-700 font-sans text-sm font-medium">
-                    {cond.analogy}
-                  </span>
-                </td>
-              ))}
+              {currentConditions.map((cond) => {
+                const isHovered = hoveredColumn === cond.id;
+                const badgeColor = 
+                  cond.id === 'heart-attack' ? 'bg-rose-50 border-rose-100 text-rose-700 font-bold' :
+                  cond.id === 'cardiac-arrest' ? 'bg-amber-50 border-amber-100 text-amber-700 font-bold' :
+                  'bg-sky-50 border-sky-100 text-sky-700 font-bold';
+                return (
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 text-sm transition-all duration-200 border-r border-slate-100 last:border-r-0 ${
+                      isHovered ? 'bg-slate-50/45' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
+                    <span className={`inline-flex px-3.5 py-1.5 rounded-xl border text-xs ${badgeColor}`}>
+                      {cond.analogy}
+                    </span>
+                  </td>
+                );
+              })}
             </tr>
 
             {/* Row 2: Underlying Condition / Trigger */}
-            <tr className="hover:bg-slate-50/5 transition-colors">
-              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/10">
-                Anatomical Trigger
+            <tr className="hover:bg-slate-50/15 transition-colors">
+              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <AlertCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>Anatomy trigger</span>
               </td>
-              {currentConditions.map((cond) => (
-                <td key={cond.id} className="p-5 text-sm text-slate-700 leading-relaxed font-sans">
-                  {cond.trigger}
-                </td>
-              ))}
+              {currentConditions.map((cond) => {
+                const isHovered = hoveredColumn === cond.id;
+                return (
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 text-xs text-slate-705 leading-relaxed font-sans font-medium border-r border-slate-100 last:border-r-0 ${
+                      isHovered ? 'bg-slate-50/45' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
+                    {cond.trigger}
+                  </td>
+                );
+              })}
             </tr>
 
             {/* Row 3: Medical Summary */}
-            <tr className="hover:bg-slate-50/5 transition-colors">
-              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/10">
-                {t.matrix.shortSummary}
+            <tr className="hover:bg-slate-50/15 transition-colors">
+              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <BookOpen className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.matrix.shortSummary}</span>
               </td>
-              {currentConditions.map((cond) => (
-                <td key={cond.id} className="p-5 text-sm text-slate-600 leading-relaxed font-sans">
-                  {cond.shortSummary}
-                </td>
-              ))}
+              {currentConditions.map((cond) => {
+                const isHovered = hoveredColumn === cond.id;
+                return (
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 text-xs text-slate-600 leading-relaxed font-sans font-medium border-r border-slate-100 last:border-r-0 ${
+                      isHovered ? 'bg-slate-50/45' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
+                    {cond.shortSummary}
+                  </td>
+                );
+              })}
             </tr>
 
             {/* Row 4: Primary Warnings */}
-            <tr className="hover:bg-slate-50/5 transition-colors">
-              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/10">
-                {t.matrix.warningSymptoms}
+            <tr className="hover:bg-slate-50/15 transition-colors">
+              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <ShieldAlert className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>{t.matrix.warningSymptoms}</span>
               </td>
-              {currentConditions.map((cond) => (
-                <td key={cond.id} className="p-5 text-sm leading-relaxed font-sans">
-                  <ul className="space-y-2 text-slate-700">
-                    {cond.symptoms.slice(0, 3).map((sym, idx) => (
-                      <li key={idx} className="flex items-start gap-2">
-                        <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 mt-2 ${
-                          sym.critical ? 'bg-rose-500' : 'bg-slate-350'
-                        }`} />
-                        <span className={sym.critical ? 'font-semibold text-slate-900' : 'text-slate-605'}>
-                          {sym.text}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                </td>
-              ))}
+              {currentConditions.map((cond) => {
+                const isHovered = hoveredColumn === cond.id;
+                return (
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 text-xs leading-relaxed font-sans border-r border-slate-100 last:border-r-0 ${
+                      isHovered ? 'bg-slate-50/45' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
+                    <ul className="space-y-2 text-slate-700">
+                      {cond.symptoms.slice(0, 3).map((sym, idx) => (
+                        <li key={idx} className="flex items-start gap-2 text-left">
+                          <span className={`inline-block w-1.5 h-1.5 rounded-full shrink-0 mt-1.5 ${
+                            sym.critical ? 'bg-rose-500' : 'bg-slate-350'
+                          }`} />
+                          <span className={sym.critical ? 'font-bold text-slate-900' : 'text-slate-605 font-medium'}>
+                            {sym.text}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </td>
+                );
+              })}
             </tr>
 
             {/* Row 5: Immediate Action */}
-            <tr className="bg-rose-50/10 hover:bg-slate-50/5 transition-colors">
-              <td className="p-5 bg-rose-500/[0.02]">
-                <div className="flex items-center gap-1.5 text-xs font-bold text-rose-600 uppercase tracking-wider font-sans">
-                  <ShieldAlert className="w-3.5 h-3.5 shrink-0 text-rose-500" />
-                  {t.matrix.firstAidProtocol}
-                </div>
+            <tr className="bg-rose-500/[0.01] hover:bg-rose-500/[0.02] transition-colors border-t border-slate-200">
+              <td className="p-5 text-xs font-bold text-rose-600 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <ShieldAlert className="w-4 h-4 text-rose-500 animate-pulse shrink-0" />
+                <span>{t.matrix.firstAidProtocol}</span>
               </td>
               {currentConditions.map((cond) => {
+                const isHovered = hoveredColumn === cond.id;
                 const isArrest = cond.id === 'cardiac-arrest';
                 const isAttack = cond.id === 'heart-attack';
                 
                 return (
-                  <td key={cond.id} className="p-5 text-sm leading-relaxed font-sans bg-rose-500/[0.01]">
-                    <div className={`p-3 rounded-xl border font-semibold text-sm shadow-sm ${
-                      isAttack ? 'bg-amber-50/60 border-amber-200 text-slate-800' :
-                      isArrest ? 'bg-rose-50/60 border-rose-200 text-slate-800' :
-                      'bg-blue-50/60 border-blue-200 text-slate-800'
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 text-xs leading-relaxed font-sans border-r border-slate-200 last:border-r-0 ${
+                      isHovered ? 'bg-rose-50/10' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
+                    <div className={`p-4 rounded-2xl border font-black text-[0.625rem] shadow-xs transition-all tracking-wide ${
+                      isAttack ? 'bg-rose-50 border-rose-200 text-rose-800' :
+                      isArrest ? 'bg-amber-50 border-amber-200 text-amber-800' :
+                      'bg-sky-50 border-sky-200 text-sky-850'
                     }`}>
                       {cond.id === 'heart-attack' && 'Call 112 or 108 instantly + Chew aspirin.'}
                       {cond.id === 'cardiac-arrest' && 'Call 112 or 108 + Start Hands-Only CPR + Use AED.'}
@@ -298,19 +383,28 @@ export default function ComparisonMatrix() {
             </tr>
 
             {/* Row 6: Study Action triggers */}
-            <tr className="bg-slate-50/30">
-              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/10">
-                Action
+            <tr className="bg-slate-50/25">
+              <td className="p-5 text-xs font-bold text-slate-500 uppercase tracking-wider font-sans bg-slate-50/30 flex items-center gap-2 border-b border-transparent">
+                <Plus className="w-4 h-4 text-slate-400 shrink-0" />
+                <span>Deep dive</span>
               </td>
               {currentConditions.map((cond) => {
                 const isSelected = expandedCard === cond.id;
+                const isHovered = hoveredColumn === cond.id;
                 return (
-                  <td key={cond.id} className="p-5">
+                  <td 
+                    key={cond.id} 
+                    className={`p-5 border-r border-slate-100 last:border-r-0 ${
+                      isHovered ? 'bg-slate-50/45' : ''
+                    }`}
+                    onMouseEnter={() => setHoveredColumn(cond.id as any)}
+                    onMouseLeave={() => setHoveredColumn(null)}
+                  >
                     <button
                       onClick={() => setExpandedCard(isSelected ? null : cond.id)}
-                      className={`w-full py-2.5 px-4 rounded-xl text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-1.5 cursor-pointer border ${
+                      className={`w-full py-2.5 px-4 rounded-xl text-xs font-extrabold transition-all shadow-xs flex items-center justify-center gap-1.5 cursor-pointer border ${
                         isSelected 
-                          ? 'bg-rose-600 border-rose-600 text-white hover:bg-rose-700' 
+                          ? 'bg-rose-600 border-rose-600 text-white hover:bg-rose-700 shadow-sm' 
                           : 'bg-white hover:bg-slate-50 border-slate-200 text-slate-700 hover:text-slate-950'
                       }`}
                     >
@@ -344,8 +438,13 @@ export default function ComparisonMatrix() {
             return (
               <button
                 key={cond.id}
-                onClick={() => setActiveMobileTab(cond.id as any)}
-                className={`flex-1 py-2 px-1 text-2xs font-extrabold rounded-xl transition-all uppercase tracking-wider text-center cursor-pointer border ${
+                onClick={() => {
+                  setActiveMobileTab(cond.id as any);
+                  if (expandedCard !== null) {
+                    setExpandedCard(cond.id);
+                  }
+                }}
+                className={`flex-1 py-2 px-1 text-[0.625rem] font-extrabold rounded-xl transition-all uppercase tracking-wider text-center cursor-pointer border ${
                   isActive
                     ? 'bg-white text-rose-600 border-slate-200 shadow-sm font-black'
                     : 'border-transparent text-slate-500 hover:text-slate-950'
@@ -538,24 +637,30 @@ export default function ComparisonMatrix() {
                 </div>
 
                 {/* 3. Myth vs Fact Block */}
-                <div className="bg-slate-50/50 border border-slate-200 rounded-2xl p-5 space-y-4">
-                  <span className="text-xs uppercase font-sans tracking-wider font-bold text-slate-500 block">
+                <div className="bg-slate-50/50 border border-slate-200 rounded-3xl p-6 space-y-6 shadow-xs">
+                  <span className="text-xs uppercase font-mono tracking-wider font-extrabold text-slate-500 block">
                     {t.matrix.mythVsFact}
                   </span>
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {cond.mythVsFact.map((mf, index) => (
-                      <div key={index} className="space-y-2.5 border-b border-slate-200 last:border-0 pb-3.5 last:pb-0">
-                        <div className="flex items-start gap-2.5 text-xs text-slate-700 font-sans leading-relaxed">
-                          <span className="text-rose-700 font-sans font-bold text-xs bg-rose-50 border border-rose-200 rounded-lg px-2 py-0.5 shrink-0 mt-0.5">
-                            {t.matrix.mythLabel}
-                          </span> 
-                          <span>{mf.myth}</span>
+                      <div key={index} className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-5 last:pb-0 border-b border-slate-200/60 last:border-b-0 font-sans">
+                        <div className="flex items-start gap-3.5 text-xs text-slate-700 leading-relaxed bg-rose-50/20 border border-rose-100/50 border-l-4 border-l-rose-500 p-4 rounded-2xl shadow-2xs">
+                          <XCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+                          <div className="space-y-1 text-left">
+                            <span className="text-rose-700 font-extrabold text-[0.625rem] tracking-wider uppercase block font-mono">
+                              {t.matrix.mythLabel}
+                            </span> 
+                            <p className="text-slate-800 font-semibold">{mf.myth}</p>
+                          </div>
                         </div>
-                        <div className="flex items-start gap-2.5 text-xs text-slate-800 font-sans leading-relaxed font-semibold">
-                          <span className="text-emerald-700 font-sans font-bold text-xs bg-emerald-50 border border-emerald-200 rounded-lg px-2 py-0.5 shrink-0 mt-0.5">
-                            {t.matrix.factLabel}
-                          </span> 
-                          <span className="text-slate-800">{mf.fact}</span>
+                        <div className="flex items-start gap-3.5 text-xs text-slate-800 leading-relaxed bg-emerald-50/20 border border-emerald-100/50 border-l-4 border-l-emerald-500 p-4 rounded-2xl shadow-2xs">
+                          <CheckCircle2 className="w-5 h-5 text-emerald-500 shrink-0 mt-0.5" />
+                          <div className="space-y-1 text-left">
+                            <span className="text-emerald-700 font-extrabold text-[0.625rem] tracking-wider uppercase block font-mono">
+                              {t.matrix.factLabel}
+                            </span> 
+                            <p className="text-slate-900 font-extrabold">{mf.fact}</p>
+                          </div>
                         </div>
                       </div>
                     ))}
